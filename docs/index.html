@@ -1259,18 +1259,49 @@ export function PostDetail({ post }: { post: Post }) {
                         </div>
                         <div class="step">
                             <span class="step-number">2</span>
-                            <code>docker build -t kora-server .</code>
+                            <code>docker-compose -f docker-compose.simple.yml up -d</code>
                         </div>
                         <div class="step">
                             <span class="step-number">3</span>
-                            <code>docker run -p 3000:3000 kora-server</code>
+                            Or with Nginx: <code>docker-compose -f docker-compose.nginx.yml up -d</code>
                         </div>
                     </div>
-                    <a href="https://github.com/upendra-manike/kora/blob/main/server/Dockerfile" class="btn btn-outline" target="_blank">View Dockerfile</a>
+                    <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1rem;">
+                        <a href="https://github.com/upendra-manike/kora/blob/main/DOCKER_WEBSERVERS.md" class="btn btn-primary" target="_blank">Web Servers Guide</a>
+                        <a href="https://github.com/upendra-manike/kora/blob/main/server/Dockerfile" class="btn btn-outline" target="_blank">Dockerfile</a>
+                    </div>
                 </div>
             </div>
 
             <div class="deploy-info">
+                <h3>Docker Web Servers</h3>
+                <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-light);">
+                    Choose the right web server for your Docker deployment
+                </p>
+                <div class="webserver-options">
+                    <div class="webserver-option">
+                        <strong>1. Direct Node.js</strong>
+                        <p>Simplest setup. Run Express directly. Best for development.</p>
+                        <code>docker-compose -f docker-compose.simple.yml up -d</code>
+                    </div>
+                    <div class="webserver-option">
+                        <strong>2. Nginx (Recommended)</strong>
+                        <p>Reverse proxy with rate limiting, compression, load balancing.</p>
+                        <code>docker-compose -f docker-compose.nginx.yml up -d</code>
+                    </div>
+                    <div class="webserver-option">
+                        <strong>3. Caddy</strong>
+                        <p>Modern web server. Simple config, easy SSL upgrade later.</p>
+                        <code>docker-compose -f docker-compose.caddy.yml up -d</code>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="https://github.com/upendra-manike/kora/blob/main/DOCKER_WEBSERVERS.md" 
+                       class="btn btn-outline" target="_blank">Complete Web Server Guide</a>
+                </div>
+            </div>
+
+            <div class="deploy-info" style="margin-top: 2rem;">
                 <h3>API Endpoints</h3>
                 <div class="api-endpoints">
                     <div class="endpoint">
