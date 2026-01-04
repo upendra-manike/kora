@@ -1,0 +1,12 @@
+api getPost {
+  input {
+    id: UUID
+  }
+
+  output Post
+
+  handler {
+    return PostRepo.find(id)
+  }
+}
+

@@ -1,0 +1,23 @@
+page CreatePost {
+  view() {
+    <div className="create-post">
+      <h1>Create New Post</h1>
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text" 
+          name="title" 
+          placeholder="Post Title"
+          required 
+        />
+        <textarea 
+          name="content" 
+          placeholder="Post Content"
+          rows={10}
+          required 
+        />
+        <button type="submit">Publish Post</button>
+      </form>
+    </div>
+  }
+}
+
