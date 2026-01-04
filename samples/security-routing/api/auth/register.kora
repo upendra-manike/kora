@@ -1,0 +1,47 @@
+api register {
+  input {
+    email: Email
+    password: String
+    name: String
+  }
+
+  output User
+
+  handler {
+    // Validate email format
+    if (!EmailValidator.isValid(email)) {
+      throw Error("Invalid email format")
+    }
+
+    // Validate password strength
+    if (!PasswordValidator.isStrong(password)) {
+      throw Error("Password must be at least 8 characters with uppercase, lowercase, number, and special character")
+    }
+
+    // Check if user already exists
+    let existing = UserRepo.findByEmail(email)
+    if (existing != null) {
+      throw Error("User with this email already exists")
+    }
+
+    // Hash password
+    let passwordHash = PasswordHash.hash(password)
+
+    // Create user
+    let user = {
+      id: UUID.generate(),
+      email: email,
+      passwordHash: passwordHash,
+      name: name,
+      role: UserRole.USER,
+      permissions: [Permission.READ_POSTS],
+      isActive: true,
+      lastLoginAt: null,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+
+    return UserRepo.save(user)
+  }
+}
+

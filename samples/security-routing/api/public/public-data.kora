@@ -1,0 +1,17 @@
+api getPublicData {
+  // Public endpoint - no authentication required
+  @public
+
+  input {
+    limit: Number?
+  }
+
+  output Post[]
+
+  handler {
+    // Public endpoint - anyone can access
+    let limit = limit || 10
+    return PostRepo.findPublic(limit)
+  }
+}
+

@@ -1,0 +1,28 @@
+page ProtectedRoute {
+  // Protected route with permission check
+  @requireAuth
+  @requirePermission(WRITE_POSTS)
+
+  load() -> Post[]
+
+  view(posts: Post[]) {
+    <div className="protected-route">
+      <h1>My Posts</h1>
+      <p>This page requires WRITE_POSTS permission</p>
+
+      <div className="posts-list">
+        {for post in posts {
+          <div key={post.id} className="post-card">
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+            <div className="post-actions">
+              <button onClick={() => editPost(post.id)}>Edit</button>
+              <button onClick={() => deletePost(post.id)}>Delete</button>
+            </div>
+          </div>
+        }}
+      </div>
+    </div>
+  }
+}
+
