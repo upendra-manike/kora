@@ -151,51 +151,49 @@ export class Parser {
    * Parse type annotation
    */
   private parseTypeAnnotation(): TypeAnnotation {
+    let baseType: TypeAnnotation;
+
     // Check for primitive types
     if (this.match(TokenType.STRING_TYPE)) {
-      return { kind: 'primitive', primitive: 'String' };
-    }
-    if (this.match(TokenType.NUMBER_TYPE)) {
-      return { kind: 'primitive', primitive: 'Number' };
-    }
-    if (this.match(TokenType.BOOLEAN_TYPE)) {
-      return { kind: 'primitive', primitive: 'Boolean' };
-    }
-    if (this.match(TokenType.UUID_TYPE)) {
-      return { kind: 'primitive', primitive: 'UUID' };
-    }
-    if (this.match(TokenType.EMAIL_TYPE)) {
-      return { kind: 'primitive', primitive: 'Email' };
-    }
-    if (this.match(TokenType.DATE_TYPE)) {
-      return { kind: 'primitive', primitive: 'Date' };
-    }
-    if (this.match(TokenType.VOID_TYPE)) {
-      return { kind: 'primitive', primitive: 'Void' };
+      baseType = { kind: 'primitive', primitive: 'String' };
+    } else if (this.match(TokenType.NUMBER_TYPE)) {
+      baseType = { kind: 'primitive', primitive: 'Number' };
+    } else if (this.match(TokenType.BOOLEAN_TYPE)) {
+      baseType = { kind: 'primitive', primitive: 'Boolean' };
+    } else if (this.match(TokenType.UUID_TYPE)) {
+      baseType = { kind: 'primitive', primitive: 'UUID' };
+    } else if (this.match(TokenType.EMAIL_TYPE)) {
+      baseType = { kind: 'primitive', primitive: 'Email' };
+    } else if (this.match(TokenType.DATE_TYPE)) {
+      baseType = { kind: 'primitive', primitive: 'Date' };
+    } else if (this.match(TokenType.VOID_TYPE)) {
+      baseType = { kind: 'primitive', primitive: 'Void' };
+    } else {
+      // Custom type
+      const name = this.consumeIdentifier('Expected type name');
+
+      // Check for generic type
+      if (this.match(TokenType.LESS)) {
+        const genericArgs: TypeAnnotation[] = [];
+        do {
+          genericArgs.push(this.parseTypeAnnotation());
+        } while (this.match(TokenType.COMMA));
+        this.consume(TokenType.GREATER, 'Expected ">"');
+        baseType = { kind: 'generic', name, genericArgs };
+      } else {
+        baseType = { kind: 'custom', name };
+      }
     }
 
-    // Custom type
-    const name = this.consumeIdentifier('Expected type name');
-
-    // Check for generic type
-    if (this.match(TokenType.LESS)) {
-      const genericArgs: TypeAnnotation[] = [];
-      do {
-        genericArgs.push(this.parseTypeAnnotation());
-      } while (this.match(TokenType.COMMA));
-      this.consume(TokenType.GREATER, 'Expected ">"');
-      return { kind: 'generic', name, genericArgs };
-    }
-
-    // Check for optional
+    // Check for optional (works for both primitives and custom types)
     if (this.match(TokenType.QUESTION)) {
       return {
         kind: 'optional',
-        inner: { kind: 'custom', name },
+        inner: baseType,
       };
     }
 
-    return { kind: 'custom', name };
+    return baseType;
   }
 
   /**
@@ -502,6 +500,42 @@ export class Parser {
   }
 
   /**
+   * Parse if statement in JSX context (no parentheses, block already started)
+   */
+  private parseJsxIfStatement(): IfStatement {
+    this.consume(TokenType.IF, 'Expected "if"');
+    const condition = this.parseExpression();
+    // In JSX, the block starts immediately after condition (no { needed, already consumed)
+    const then = this.parseBlock();
+    const elseBlock = this.match(TokenType.ELSE) ? this.parseBlock() : undefined;
+
+    return {
+      kind: 'if',
+      condition,
+      then,
+      else: elseBlock,
+    };
+  }
+
+  /**
+   * Parse for statement in JSX context (no parentheses)
+   */
+  private parseJsxForStatement(): ForStatement {
+    this.consume(TokenType.FOR, 'Expected "for"');
+    const variable = this.consumeIdentifier('Expected variable name');
+    this.consume(TokenType.IN, 'Expected "in"');
+    const iterable = this.parseExpression();
+    const body = this.parseBlock();
+
+    return {
+      kind: 'for',
+      variable,
+      iterable,
+      body,
+    };
+  }
+
+  /**
    * Parse expression (with precedence)
    */
   private parseExpression(): Expression {
@@ -789,9 +823,20 @@ export class Parser {
         }
         children.push(this.parseJsxElement());
       } else if (this.match(TokenType.LEFT_BRACE)) {
-        const expr = this.parseExpression();
-        this.consume(TokenType.RIGHT_BRACE, 'Expected "}"');
-        children.push({ kind: 'jsx-expression', expression: expr });
+        // Check if it's an if or for statement (control flow in JSX)
+        if (this.check(TokenType.IF)) {
+          const ifStmt = this.parseJsxIfStatement();
+          this.consume(TokenType.RIGHT_BRACE, 'Expected "}"');
+          children.push({ kind: 'jsx-expression', expression: ifStmt });
+        } else if (this.check(TokenType.FOR)) {
+          const forStmt = this.parseJsxForStatement();
+          this.consume(TokenType.RIGHT_BRACE, 'Expected "}"');
+          children.push({ kind: 'jsx-expression', expression: forStmt });
+        } else {
+          const expr = this.parseExpression();
+          this.consume(TokenType.RIGHT_BRACE, 'Expected "}"');
+          children.push({ kind: 'jsx-expression', expression: expr });
+        }
       } else {
         // Text content
         const start = this.current;

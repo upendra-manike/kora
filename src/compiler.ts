@@ -417,6 +417,35 @@ export class Compiler {
   }
 
   /**
+   * Compile if statement in JSX context (returns JSX, not wrapped in braces)
+   */
+  private compileIfStatementInJsx(stmt: IfStatement, indent: number = 0, moduleName?: string): string {
+    const indentStr = ' '.repeat(indent);
+    const condition = this.compileExpression(stmt.condition);
+    const then = this.compileJsxContent(stmt.then.statements, indent + 2, moduleName);
+    
+    let output = `${indentStr}{${condition} && (\n${then}\n${indentStr})}`;
+    
+    if (stmt.else) {
+      const elseBlock = this.compileJsxContent(stmt.else.statements, indent + 2, moduleName);
+      output = `${indentStr}{${condition} ? (\n${then}\n${indentStr}) : (\n${elseBlock}\n${indentStr})}`;
+    }
+    
+    return output;
+  }
+
+  /**
+   * Compile for statement in JSX context (returns JSX, not wrapped in braces)
+   */
+  private compileForStatementInJsx(stmt: ForStatement, indent: number = 0, moduleName?: string): string {
+    const indentStr = ' '.repeat(indent);
+    const iterable = this.compileExpression(stmt.iterable);
+    const body = this.compileJsxContent(stmt.body.statements, indent + 2, moduleName);
+    
+    return `${indentStr}{${iterable}.map((${stmt.variable}) => (\n${body}\n${indentStr}))}`;
+  }
+
+  /**
    * Compile expression statement
    */
   private compileExpressionStatement(stmt: ExpressionStatement): string {
@@ -507,6 +536,13 @@ export class Compiler {
       return text ? ' '.repeat(indent) + text : '';
     }
     if (child.kind === 'jsx-expression') {
+      // Handle statements (if/for) in JSX expressions
+      if (child.expression.kind === 'if') {
+        return ' '.repeat(indent) + this.compileIfStatementInJsx(child.expression, indent);
+      }
+      if (child.expression.kind === 'for') {
+        return ' '.repeat(indent) + this.compileForStatementInJsx(child.expression, indent);
+      }
       return ' '.repeat(indent) + `{${this.compileExpression(child.expression)}}`;
     }
     return '';

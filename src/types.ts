@@ -369,7 +369,7 @@ export interface JsxText {
  */
 export interface JsxExpression {
   kind: 'jsx-expression';
-  expression: Expression;
+  expression: Expression | IfStatement | ForStatement;
 }
 
 /**
