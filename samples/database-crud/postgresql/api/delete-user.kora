@@ -1,0 +1,27 @@
+api deleteUser {
+  input {
+    id: UUID
+  }
+
+  output Boolean
+
+  handler {
+    // Use transaction to delete user and profile
+    UserRepo.beginTransaction()
+    
+    try {
+      // Delete profile first (foreign key constraint)
+      UserProfileRepo.deleteByUserId(id)
+      
+      // Delete user
+      UserRepo.delete(id)
+      
+      UserRepo.commit()
+      return true
+    } catch (error) {
+      UserRepo.rollback()
+      throw error
+    }
+  }
+}
+

@@ -1,0 +1,35 @@
+api createUser {
+  input {
+    name: String
+    email: Email
+    age: Number?
+    role: UserRole
+    profile: UserProfile?
+  }
+
+  output User
+
+  handler {
+    // Validate email uniqueness
+    let existing = UserRepo.findByEmail(email)
+    if (existing != null) {
+      throw Error("User with this email already exists")
+    }
+
+    // Create user
+    let user = {
+      id: UUID.generate(),
+      name: name,
+      email: email,
+      age: age,
+      role: role,
+      profile: profile,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+
+    // Save to PostgreSQL (transaction)
+    return UserRepo.save(user)
+  }
+}
+

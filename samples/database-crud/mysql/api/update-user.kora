@@ -1,0 +1,38 @@
+api updateUser {
+  input {
+    id: UUID
+    name: String?
+    email: Email?
+    age: Number?
+    role: UserRole?
+    profile: UserProfile?
+  }
+
+  output User
+
+  handler {
+    let user = UserRepo.findById(id)
+    if (user == null) {
+      throw Error("User not found")
+    }
+
+    if (name != null) user.name = name
+    if (email != null) {
+      let existing = UserRepo.findByEmail(email)
+      if (existing != null && existing.id != id) {
+        throw Error("Email already taken")
+      }
+      user.email = email
+    }
+    if (age != null) user.age = age
+    if (role != null) user.role = role
+    if (profile != null) {
+      user.profile = profile
+      UserProfileRepo.save(id, profile)
+    }
+
+    user.updatedAt = Date.now()
+    return UserRepo.save(user)
+  }
+}
+

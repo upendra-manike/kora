@@ -1,0 +1,20 @@
+api getUser {
+  input {
+    id: UUID
+  }
+
+  output User
+
+  handler {
+    let user = UserRepo.findById(id)
+    if (user == null) {
+      throw Error("User not found")
+    }
+    
+    // Load profile
+    user.profile = UserProfileRepo.findByUserId(id)
+    
+    return user
+  }
+}
+
