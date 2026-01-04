@@ -358,7 +358,7 @@ export class Compiler {
       case 'expression':
         return this.compileExpressionStatement(statement);
       case 'jsx':
-        return this.compileJsxElement(statement, 0);
+        return this.compileJsxElement(statement);
       default:
         return '// Unknown statement';
     }
@@ -426,13 +426,13 @@ export class Compiler {
   /**
    * Compile JSX content from statements
    */
-  private compileJsxContent(statements: Statement[], indent: number): string {
+  private compileJsxContent(statements: Statement[], indent: number, moduleName?: string): string {
     const indentStr = ' '.repeat(indent);
     const output: string[] = [];
 
     for (const stmt of statements) {
       if (stmt.kind === 'jsx') {
-        output.push(indentStr + this.compileJsxElement(stmt));
+        output.push(this.compileJsxElement(stmt, indent, moduleName));
       } else if (stmt.kind === 'expression') {
         // Could be JSX expression
         const expr = this.compileExpression(stmt.expression);

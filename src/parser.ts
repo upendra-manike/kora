@@ -1004,11 +1004,11 @@ export class Parser {
     let value = '';
     while (!this.check(TokenType.SEMICOLON) && !this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
       if (this.check(TokenType.STRING)) {
-        value += this.consume(TokenType.STRING, 'Expected string').value;
+        value += this.consume(TokenType.STRING, 'Expected string');
       } else if (this.check(TokenType.NUMBER)) {
-        value += this.consume(TokenType.NUMBER, 'Expected number').value;
+        value += this.consume(TokenType.NUMBER, 'Expected number');
       } else if (this.check(TokenType.IDENTIFIER)) {
-        value += this.consume(TokenType.IDENTIFIER, 'Expected identifier').value;
+        value += this.consume(TokenType.IDENTIFIER, 'Expected identifier');
       } else {
         value += this.advance().value;
       }
@@ -1051,7 +1051,8 @@ export class Parser {
 
     while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
       // Check for @media
-      if (this.check(TokenType.IDENTIFIER) && this.peek().value === '@media') {
+      const peekToken = this.peek();
+      if (this.check(TokenType.IDENTIFIER) && peekToken.value === '@media') {
         this.advance();
         currentMediaQuery = this.parseMediaQuery();
         this.consume(TokenType.LEFT_BRACE, 'Expected "{" after media query');
