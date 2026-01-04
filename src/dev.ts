@@ -33,6 +33,8 @@ export async function startDevServer(options: DevOptions = {}): Promise<void> {
   } else {
     console.error(chalk.red('❌ Initial build failed:'));
     initialResult.errors.forEach(e => console.error(chalk.red(`   ${e}`)));
+    console.error(chalk.red('\n⚠️  Cannot start dev server with build errors. Please fix errors and try again.'));
+    process.exit(1);
   }
   
   console.log('');
