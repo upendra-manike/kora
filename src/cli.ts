@@ -11,6 +11,8 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import { Parser } from './parser';
 import { Compiler } from './compiler';
+import { buildProject } from './build';
+import { startDevServer } from './dev';
 
 const program = new Command();
 
@@ -79,19 +81,47 @@ program
   .command('build')
   .description('Build Kora project to TypeScript/JavaScript')
   .option('-o, --out <dir>', 'Output directory', 'dist')
-  .action((_options) => {
+  .option('-s, --src <dir>', 'Source directory', 'src')
+  .action(async (options: { out?: string; src?: string }) => {
     console.log('Building Kora project...');
-    // TODO: Implement build
-    console.log('✅ Build complete');
+    
+    try {
+      const result = await buildProject({
+        srcDir: options.src,
+        outDir: options.out,
+      });
+      
+      if (result.success) {
+        console.log(`✅ Build complete: ${result.files} file(s) compiled`);
+        if (result.warnings.length > 0) {
+          result.warnings.forEach(w => console.warn(`⚠️  ${w}`));
+        }
+      } else {
+        console.error('❌ Build failed:');
+        result.errors.forEach(e => console.error(`   ${e}`));
+        process.exit(1);
+      }
+    } catch (error: any) {
+      console.error('❌ Build error:', error.message);
+      process.exit(1);
+    }
   });
 
 program
   .command('dev')
   .description('Start development server with hot reload')
-  .action(() => {
-    console.log('Starting Kora dev server...');
-    // TODO: Implement dev server
-    console.log('✅ Dev server running');
+  .option('-s, --src <dir>', 'Source directory', 'src')
+  .option('-o, --out <dir>', 'Output directory', 'dist')
+  .action(async (options: { src?: string; out?: string }) => {
+    try {
+      await startDevServer({
+        srcDir: options.src,
+        outDir: options.out,
+      });
+    } catch (error: any) {
+      console.error('❌ Dev server error:', error.message);
+      process.exit(1);
+    }
   });
 
 program

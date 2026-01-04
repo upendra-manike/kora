@@ -16,7 +16,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "node --test",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
     "check": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
@@ -45,11 +47,14 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.3.0"
+    "@types/node": "^20.19.27",
+    "@vitest/ui": "^4.0.16",
+    "chalk": "^5.6.2",
+    "chokidar": "^5.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.0.16"
   },
   "dependencies": {
     "commander": "^11.0.0"
   }
 }
-
