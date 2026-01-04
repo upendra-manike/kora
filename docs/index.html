@@ -287,6 +287,282 @@ kora dev</code></pre>
         </div>
     </section>
 
+    <section id="todo-demo" class="code-demo">
+        <div class="container">
+            <h2>Todo App - Interactive Demo</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">
+                See how a complete Todo app is built with Kora
+            </p>
+            
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="showDemoTab('todo-domain')">Domain</button>
+                <button class="demo-tab" onclick="showDemoTab('todo-api')">API</button>
+                <button class="demo-tab" onclick="showDemoTab('todo-ui')">UI</button>
+            </div>
+
+            <div id="todo-domain" class="demo-content active">
+                <h3>Domain Definition</h3>
+                <pre><code>module domain Todo {
+  type Todo {
+    id: UUID
+    title: String
+    description: String?
+    completed: Boolean
+    priority: Priority
+    createdAt: Date
+  }
+
+  type Priority {
+    LOW
+    MEDIUM
+    HIGH
+  }
+}</code></pre>
+                <p class="demo-note">✅ Defines the data model. Compiler generates TypeScript interfaces.</p>
+            </div>
+
+            <div id="todo-api" class="demo-content">
+                <h3>API Endpoint</h3>
+                <pre><code>api createTodo {
+  input {
+    title: String
+    description: String?
+    priority: Priority
+  }
+
+  output Todo
+
+  handler {
+    let todo = {
+      id: UUID.generate(),
+      title: title,
+      completed: false,
+      priority: priority,
+      createdAt: Date.now()
+    }
+    return TodoRepo.save(todo)
+  }
+}</code></pre>
+                <p class="demo-note">✅ Creates the API. Compiler generates handler and route.</p>
+            </div>
+
+            <div id="todo-ui" class="demo-content">
+                <h3>UI Page</h3>
+                <pre><code>page TodoList {
+  load() -> Todo[]
+
+  view(todos: Todo[]) {
+    <div className="todo-list">
+      <h1>My Todos</h1>
+      {for todo in todos {
+        <div key={todo.id}>
+          <input type="checkbox" checked={todo.completed} />
+          <span>{todo.title}</span>
+        </div>
+      }}
+    </div>
+  }
+}</code></pre>
+                <p class="demo-note">✅ Builds the UI. Compiler generates React component and connects to API.</p>
+            </div>
+
+            <div class="demo-actions">
+                <a href="https://github.com/upendra-manike/kora/tree/main/samples/todo-app" 
+                   class="btn btn-primary" target="_blank">View Full Code</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/samples/HOW_TO_USE.md" 
+                   class="btn btn-outline" target="_blank">How to Use</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="ecommerce-demo" class="code-demo" style="background: var(--bg-light);">
+        <div class="container">
+            <h2>E-commerce App - Interactive Demo</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">
+                Complex shopping system with products, cart, and orders
+            </p>
+            
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="showDemoTab('ecom-domain')">Domain</button>
+                <button class="demo-tab" onclick="showDemoTab('ecom-api')">API</button>
+                <button class="demo-tab" onclick="showDemoTab('ecom-ui')">UI</button>
+            </div>
+
+            <div id="ecom-domain" class="demo-content active">
+                <h3>Domain Models</h3>
+                <pre><code>module domain Product {
+  type Product {
+    id: UUID
+    name: String
+    price: Number
+    category: Category
+    inStock: Boolean
+  }
+
+  type Cart {
+    id: UUID
+    userId: UUID
+    items: CartItem[]
+    total: Number
+  }
+
+  type Order {
+    id: UUID
+    items: OrderItem[]
+    status: OrderStatus
+    total: Number
+  }
+}</code></pre>
+                <p class="demo-note">✅ Multiple related types. Compiler handles relationships automatically.</p>
+            </div>
+
+            <div id="ecom-api" class="demo-content">
+                <h3>API with Filters</h3>
+                <pre><code>api getProducts {
+  input {
+    categoryId: UUID?
+    minPrice: Number?
+    maxPrice: Number?
+    inStock: Boolean?
+    search: String?
+  }
+
+  output Product[]
+
+  handler {
+    return ProductRepo.findByFilters(
+      categoryId,
+      minPrice,
+      maxPrice,
+      inStock,
+      search
+    )
+  }
+}</code></pre>
+                <p class="demo-note">✅ Complex filtering. Optional parameters handled automatically.</p>
+            </div>
+
+            <div id="ecom-ui" class="demo-content">
+                <h3>Product List Page</h3>
+                <pre><code>page ProductList {
+  load(categoryId: UUID?) -> Product[]
+
+  view(products: Product[]) {
+    <div className="product-list">
+      {for product in products {
+        <div key={product.id}>
+          <h3>{product.name}</h3>
+          <p>${product.price}</p>
+          {if product.inStock {
+            <button onClick={() => addToCart(product.id)}>
+              Add to Cart
+            </button>
+          }}
+        </div>
+      }}
+    </div>
+  }
+}</code></pre>
+                <p class="demo-note">✅ Conditional rendering. Automatic API connection.</p>
+            </div>
+
+            <div class="demo-actions">
+                <a href="https://github.com/upendra-manike/kora/tree/main/samples/ecommerce" 
+                   class="btn btn-primary" target="_blank">View Full Code</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/samples/HOW_TO_USE.md" 
+                   class="btn btn-outline" target="_blank">How to Use</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog-demo" class="code-demo">
+        <div class="container">
+            <h2>Blog System - Interactive Demo</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">
+                Content management with posts, comments, and user roles
+            </p>
+            
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="showDemoTab('blog-domain')">Domain</button>
+                <button class="demo-tab" onclick="showDemoTab('blog-api')">API</button>
+                <button class="demo-tab" onclick="showDemoTab('blog-ui')">UI</button>
+            </div>
+
+            <div id="blog-domain" class="demo-content active">
+                <h3>Nested Domain Models</h3>
+                <pre><code>module domain Post {
+  type Post {
+    id: UUID
+    title: String
+    content: String
+    author: User
+    comments: Comment[]
+    published: Boolean
+    createdAt: Date
+  }
+
+  type Comment {
+    id: UUID
+    author: User
+    content: String
+    parentId: UUID?
+    createdAt: Date
+  }
+}</code></pre>
+                <p class="demo-note">✅ Nested relationships. Arrays and references handled automatically.</p>
+            </div>
+
+            <div id="blog-api" class="demo-content">
+                <h3>Publish API</h3>
+                <pre><code>api publishPost {
+  input {
+    id: UUID
+  }
+
+  output Post
+
+  handler {
+    let post = PostRepo.find(id)
+    post.published = true
+    post.publishedAt = Date.now()
+    return PostRepo.save(post)
+  }
+}</code></pre>
+                <p class="demo-note">✅ State updates. Type-safe mutations.</p>
+            </div>
+
+            <div id="blog-ui" class="demo-content">
+                <h3>Post Detail with Comments</h3>
+                <pre><code>page PostDetail {
+  load(slug: String) -> Post
+
+  view(post: Post) {
+    <article>
+      <h1>{post.title}</h1>
+      <div>{post.content}</div>
+      <section className="comments">
+        {for comment in post.comments {
+          <div key={comment.id}>
+            <p>{comment.content}</p>
+            <span>By {comment.author.name}</span>
+          </div>
+        }}
+      </section>
+    </article>
+  }
+}</code></pre>
+                <p class="demo-note">✅ Nested data rendering. Automatic type safety.</p>
+            </div>
+
+            <div class="demo-actions">
+                <a href="https://github.com/upendra-manike/kora/tree/main/samples/blog-system" 
+                   class="btn btn-primary" target="_blank">View Full Code</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/samples/HOW_TO_USE.md" 
+                   class="btn btn-outline" target="_blank">How to Use</a>
+            </div>
+        </div>
+    </section>
+
     <section id="examples" class="examples">
         <div class="container">
             <h2>Example: Complete Blog App</h2>
