@@ -1,5 +1,5 @@
 {
-  "name": "@upendra.manike/kora",
+  "name": "@kora-lang/kora",
   "version": "0.1.0",
   "description": "Kora - A full-stack programming language that compiles to TypeScript/JavaScript",
   "type": "module",
