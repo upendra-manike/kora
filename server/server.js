@@ -13,6 +13,36 @@ import rateLimit from 'express-rate-limit';
 // Load Kora module (ES modules require async import)
 let Parser, Compiler;
 
+/**
+ * Safely extract error message from unknown error type
+ * @param {unknown} error - The error value (could be Error, string, or any type)
+ * @returns {string} - The error message as a string
+ */
+function getErrorMessage(error) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String(error.message);
+  }
+  return 'Unknown error';
+}
+
+/**
+ * Safely extract error stack from unknown error type
+ * @param {unknown} error - The error value (could be Error, string, or any type)
+ * @returns {string|undefined} - The error stack if available
+ */
+function getErrorStack(error) {
+  if (error instanceof Error) {
+    return error.stack;
+  }
+  return undefined;
+}
+
 async function loadKoraModule() {
   try {
     // Try to load from dist first (for local development)
@@ -28,7 +58,7 @@ async function loadKoraModule() {
       Compiler = kora.Compiler;
       console.log('✅ Loaded Kora from npm package');
     } catch (e2) {
-      console.error('❌ Failed to load Kora module:', e2.message);
+      console.error('❌ Failed to load Kora module:', getErrorMessage(e2));
       throw new Error('Kora module not available. Please build the project or install @kora-lang/kora');
     }
   }
@@ -98,8 +128,8 @@ async function startServer() {
     } catch (error) {
       res.status(400).json({
         success: false,
-        error: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        error: getErrorMessage(error),
+        stack: process.env.NODE_ENV === 'development' ? getErrorStack(error) : undefined
       });
     }
   });
@@ -128,7 +158,7 @@ async function startServer() {
       res.json({
         success: false,
         valid: false,
-        error: error.message
+        error: getErrorMessage(error)
       });
     }
   });
@@ -151,7 +181,7 @@ async function startServer() {
 }
 
 startServer().catch((err) => {
-  console.error('Failed to start server:', err);
+  console.error('Failed to start server:', getErrorMessage(err));
   process.exit(1);
 });
 
