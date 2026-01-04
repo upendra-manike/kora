@@ -2,6 +2,7 @@
   "name": "@kora-lang/server",
   "version": "0.1.0",
   "description": "Kora Language API Server",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
