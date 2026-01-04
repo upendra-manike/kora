@@ -15,6 +15,23 @@ function showTab(tabName) {
     event.target.classList.add('active');
 }
 
+// Demo tab switching
+function showDemoTab(tabName) {
+    // Hide all demo tabs
+    const tabs = document.querySelectorAll('.demo-content');
+    tabs.forEach(tab => tab.classList.remove('active'));
+    
+    // Remove active class from all buttons
+    const buttons = document.querySelectorAll('.demo-tab');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    // Show selected tab
+    document.getElementById(tabName).classList.add('active');
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+}
+
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
