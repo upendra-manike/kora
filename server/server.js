@@ -9,7 +9,19 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-const { Parser, Compiler } = require('../dist/index.js');
+
+// Try to load from dist first, fallback to package
+let Parser, Compiler;
+try {
+  const kora = require('../dist/index.js');
+  Parser = kora.Parser;
+  Compiler = kora.Compiler;
+} catch (e) {
+  // Fallback to npm package if dist doesn't exist
+  const kora = require('@kora-lang/kora');
+  Parser = kora.Parser;
+  Compiler = kora.Compiler;
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
