@@ -105,17 +105,48 @@
 
     <section id="tutorial" class="tutorial">
         <div class="container">
-            <h2>How to Use Kora</h2>
+            <h2>Complete Tutorial</h2>
+            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-light);">
+                Learn how to build full-stack applications with Kora. From basics to advanced patterns.
+            </p>
+
+            <div class="tutorial-intro">
+                <div class="tutorial-badge">
+                    <span>📚</span>
+                    <a href="https://github.com/upendra-manike/kora/blob/main/TUTORIAL.md" target="_blank" class="btn btn-outline">Read Full Tutorial</a>
+                </div>
+            </div>
             
             <div class="tutorial-step">
-                <h3>Step 1: Define Your Domain</h3>
-                <p>Start by defining your data models in a domain module:</p>
-                <pre><code>module domain Post {
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Installation & Setup</h3>
+                    <p>Get Kora installed and create your first project:</p>
+                    <pre><code># Install globally
+npm install -g @kora-lang/kora
+
+# Create a new project
+kora new my-app
+
+# Or compile a single file
+kora compile hello.kora -o hello.ts</code></pre>
+                    <p class="step-note">✅ Kora compiles to standard TypeScript/JavaScript that works with React, Next.js, and Node.js.</p>
+                </div>
+            </div>
+
+            <div class="tutorial-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Define Your Domain</h3>
+                    <p>Start by defining your data models in a domain module:</p>
+                    <pre><code>module domain Post {
   type Post {
     id: UUID
     title: String
     content: String
     author: Author
+    tags: String[]
+    published: Boolean?
     createdAt: Date
   }
 
@@ -125,13 +156,16 @@
     email: Email
   }
 }</code></pre>
-                <p class="step-note">✅ The compiler generates TypeScript interfaces automatically.</p>
+                    <p class="step-note">✅ Domain modules enforce clean architecture. They can only import from other domain modules.</p>
+                </div>
             </div>
 
             <div class="tutorial-step">
-                <h3>Step 2: Create API Endpoints</h3>
-                <p>Define your API with input/output types:</p>
-                <pre><code>api getPost {
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Create API Endpoints</h3>
+                    <p>Define your backend APIs with type-safe input/output:</p>
+                    <pre><code>api getPost {
   input {
     id: UUID
   }
@@ -139,16 +173,42 @@
   output Post
 
   handler {
-    return PostRepo.find(id)
+    const post = PostRepo.findById(id)
+    if (!post) {
+      throw Error("Post not found")
+    }
+    return post
+  }
+}
+
+api createPost {
+  input {
+    title: String
+    content: String
+    authorId: UUID
+  }
+
+  output Post
+
+  handler {
+    return PostRepo.create({
+      title,
+      content,
+      authorId,
+      createdAt: Date.now()
+    })
   }
 }</code></pre>
-                <p class="step-note">✅ The compiler generates API routes and handler functions.</p>
+                    <p class="step-note">✅ APIs can import from Domain modules. The compiler generates API routes, validation, and error handling.</p>
+                </div>
             </div>
 
             <div class="tutorial-step">
-                <h3>Step 3: Build UI Pages</h3>
-                <p>Create pages that automatically connect to your APIs:</p>
-                <pre><code>page PostDetail {
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Build UI Pages</h3>
+                    <p>Create pages that automatically connect to your APIs:</p>
+                    <pre><code>page PostDetail {
   load(id: UUID) -> Post
 
   view(post: Post) {
@@ -156,23 +216,140 @@
       <h1>{post.title}</h1>
       <p>{post.content}</p>
       <p>By {post.author.name}</p>
+      {post.tags.map(tag => (
+        <span key={tag}>{tag}</span>
+      ))}
     </div>
   }
 }</code></pre>
-                <p class="step-note">✅ The compiler generates React components and connects them to APIs automatically.</p>
+                    <p class="step-note">✅ Pages can import from Domain modules. The compiler generates React components with automatic API connections.</p>
+                </div>
             </div>
 
             <div class="tutorial-step">
-                <h3>Step 4: Compile and Use</h3>
-                <pre><code># Check your code
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Add Styling</h3>
+                    <p>Style your components with scoped CSS:</p>
+                    <pre><code>page StyledPost {
+  styles {
+    .container {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .title {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: #007bff;
+      color: white;
+      border-radius: 4px;
+      margin-right: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  }
+
+  view(post: Post) {
+    <div className="container">
+      <h1 className="title">{post.title}</h1>
+      <p>{post.content}</p>
+    </div>
+  }
+}</code></pre>
+                    <p class="step-note">✅ Styles are scoped to components. Use global styles for theme variables and base styles.</p>
+                </div>
+            </div>
+
+            <div class="tutorial-step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h3>Compile and Deploy</h3>
+                    <p>Build your application:</p>
+                    <pre><code># Check for errors
 kora check src/domain/post.kora
 
 # Compile to TypeScript
+kora compile src/domain/post.kora -o dist/post.ts
+
+# Build entire project
 kora build
 
-# Start development
+# Start development server
 kora dev</code></pre>
-                <p class="step-note">✅ Import the generated code in your Next.js/React app from the <code>dist/</code> directory.</p>
+                    <p class="step-note">✅ Import generated code in your Next.js/React app. Output is standard TypeScript - debug and modify as needed!</p>
+                </div>
+            </div>
+
+            <div class="tutorial-advanced">
+                <h3>Advanced Topics</h3>
+                <div class="tutorial-topics">
+                    <div class="topic-card">
+                        <h4>🔐 Security & Authentication</h4>
+                        <p>Learn about route protection, JWT tokens, and authorization patterns.</p>
+                        <a href="https://github.com/upendra-manike/kora/tree/main/samples/security-routing" target="_blank" class="btn btn-sm">View Example</a>
+                    </div>
+                    <div class="topic-card">
+                        <h4>🗄️ Database Integration</h4>
+                        <p>See how to use MongoDB, PostgreSQL, MySQL, and Prisma with Kora.</p>
+                        <a href="https://github.com/upendra-manike/kora/tree/main/samples/database-crud" target="_blank" class="btn btn-sm">View Example</a>
+                    </div>
+                    <div class="topic-card">
+                        <h4>🎨 CSS & Styling</h4>
+                        <p>Master component-scoped styles, global themes, and responsive design.</p>
+                        <a href="https://github.com/upendra-manike/kora/tree/main/samples/css-styling" target="_blank" class="btn btn-sm">View Example</a>
+                    </div>
+                    <div class="topic-card">
+                        <h4>🚀 Deployment</h4>
+                        <p>Deploy Kora apps to Railway, Render, Vercel, Docker, and more.</p>
+                        <a href="#deploy" class="btn btn-sm">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-resources">
+                <h3>Additional Resources</h3>
+                <div class="resources-grid">
+                    <a href="https://github.com/upendra-manike/kora/blob/main/TUTORIAL.md" target="_blank" class="resource-link">
+                        <span>📖</span>
+                        <div>
+                            <strong>Full Tutorial</strong>
+                            <p>Complete guide with examples</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/upendra-manike/kora/blob/main/GETTING_STARTED.md" target="_blank" class="resource-link">
+                        <span>🚀</span>
+                        <div>
+                            <strong>Getting Started</strong>
+                            <p>Quick start guide</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/upendra-manike/kora/tree/main/samples" target="_blank" class="resource-link">
+                        <span>💡</span>
+                        <div>
+                            <strong>Sample Projects</strong>
+                            <p>Real-world examples</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/upendra-manike/kora/blob/main/ROADMAP.md" target="_blank" class="resource-link">
+                        <span>🗺️</span>
+                        <div>
+                            <strong>Roadmap</strong>
+                            <p>What's coming next</p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
