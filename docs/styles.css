@@ -673,6 +673,213 @@ code {
     flex-wrap: wrap;
 }
 
+/* Deploy Section */
+.deploy {
+    background: white;
+    padding: 5rem 0;
+}
+
+.deploy-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.deploy-card {
+    background: var(--bg-light);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.deploy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.deploy-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.deploy-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.deploy-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.deploy-badge.recommended {
+    background: #10b981;
+    color: white;
+}
+
+.deploy-badge.easy {
+    background: #3b82f6;
+    color: white;
+}
+
+.deploy-badge.serverless {
+    background: #8b5cf6;
+    color: white;
+}
+
+.deploy-badge.flexible {
+    background: #f59e0b;
+    color: white;
+}
+
+.deploy-card p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    min-height: 3rem;
+}
+
+.deploy-steps {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    gap: 0.75rem;
+}
+
+.step:last-child {
+    margin-bottom: 0;
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.875rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.step code {
+    background: var(--bg-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    flex: 1;
+}
+
+.deploy-info {
+    background: var(--bg-light);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.deploy-info h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+.api-endpoints {
+    display: grid;
+    gap: 1rem;
+}
+
+.endpoint {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.endpoint-method {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-align: center;
+    min-width: 4rem;
+}
+
+.endpoint-path {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.endpoint-desc {
+    grid-column: 1 / -1;
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.deploy-example {
+    background: var(--bg-light);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.deploy-example h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.deploy-example pre {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.deploy-example code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.example-note {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+.deploy-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
 /* Footer */
 .footer {
     background: var(--text-color);

@@ -1165,6 +1165,153 @@ export function PostDetail({ post }: { post: Post }) {
         </div>
     </section>
 
+    <section id="deploy" class="deploy">
+        <div class="container">
+            <h2>Deploy Kora Server</h2>
+            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-light);">
+                Deploy Kora API server to compile code in the cloud
+            </p>
+
+            <div class="deploy-options">
+                <div class="deploy-card">
+                    <div class="deploy-icon">🚂</div>
+                    <h3>Railway</h3>
+                    <p class="deploy-badge recommended">Recommended</p>
+                    <p>Easiest deployment with free tier. Perfect for getting started.</p>
+                    <div class="deploy-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <code>npm i -g @railway/cli</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <code>railway login</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <code>cd server && railway init</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <code>railway up</code>
+                        </div>
+                    </div>
+                    <a href="https://railway.app" class="btn btn-primary" target="_blank">Deploy on Railway</a>
+                </div>
+
+                <div class="deploy-card">
+                    <div class="deploy-icon">🎨</div>
+                    <h3>Render</h3>
+                    <p class="deploy-badge easy">No CLI Needed</p>
+                    <p>Deploy directly from GitHub. No command line required.</p>
+                    <div class="deploy-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            Go to render.com
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            New → Web Service
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            Connect GitHub repo
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            Set Root: <code>server</code>
+                        </div>
+                    </div>
+                    <a href="https://render.com" class="btn btn-primary" target="_blank">Deploy on Render</a>
+                </div>
+
+                <div class="deploy-card">
+                    <div class="deploy-icon">▲</div>
+                    <h3>Vercel</h3>
+                    <p class="deploy-badge serverless">Serverless</p>
+                    <p>Serverless functions. Auto-scales and fast global CDN.</p>
+                    <div class="deploy-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <code>npm i -g vercel</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <code>cd server</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <code>vercel</code>
+                        </div>
+                    </div>
+                    <a href="https://vercel.com" class="btn btn-primary" target="_blank">Deploy on Vercel</a>
+                </div>
+
+                <div class="deploy-card">
+                    <div class="deploy-icon">🐳</div>
+                    <h3>Docker</h3>
+                    <p class="deploy-badge flexible">Any Platform</p>
+                    <p>Deploy anywhere Docker runs. AWS, GCP, Azure, or your own server.</p>
+                    <div class="deploy-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <code>cd server</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <code>docker build -t kora-server .</code>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <code>docker run -p 3000:3000 kora-server</code>
+                        </div>
+                    </div>
+                    <a href="https://github.com/upendra-manike/kora/blob/main/server/Dockerfile" class="btn btn-outline" target="_blank">View Dockerfile</a>
+                </div>
+            </div>
+
+            <div class="deploy-info">
+                <h3>API Endpoints</h3>
+                <div class="api-endpoints">
+                    <div class="endpoint">
+                        <div class="endpoint-method">POST</div>
+                        <div class="endpoint-path">/api/compile</div>
+                        <div class="endpoint-desc">Compile Kora code to TypeScript and CSS</div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-method">POST</div>
+                        <div class="endpoint-path">/api/check</div>
+                        <div class="endpoint-desc">Check if Kora code is valid</div>
+                    </div>
+                    <div class="endpoint">
+                        <div class="endpoint-method">GET</div>
+                        <div class="endpoint-path">/health</div>
+                        <div class="endpoint-desc">Health check endpoint</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deploy-example">
+                <h3>Example: Compile Code</h3>
+                <pre><code>curl -X POST https://your-app-url/api/compile \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "page Test { view() { <div>Hello World</div> } }"
+  }'</code></pre>
+                <p class="example-note">✅ Returns TypeScript and CSS output</p>
+            </div>
+
+            <div class="deploy-links">
+                <a href="https://github.com/upendra-manike/kora/blob/main/DEPLOYMENT.md" 
+                   class="btn btn-primary" target="_blank">Full Deployment Guide</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/DEPLOYMENT_QUICKSTART.md" 
+                   class="btn btn-outline" target="_blank">Quick Start</a>
+                <a href="https://github.com/upendra-manike/kora/tree/main/server" 
+                   class="btn btn-outline" target="_blank">Server Code</a>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer">
         <div class="container">
             <p>&copy; 2024 Kora Language. Licensed under Apache 2.0.</p>
