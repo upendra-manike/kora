@@ -273,6 +273,39 @@ kora dev</code></pre>
                         <a href="#blog-demo" class="btn btn-primary">Try It</a>
                     </div>
                 </div>
+
+                <div class="sample-card">
+                    <div class="sample-header">
+                        <span class="sample-badge intermediate">Database</span>
+                        <h3>🗄️ Database CRUD</h3>
+                    </div>
+                    <p>Complete CRUD operations with MongoDB, PostgreSQL, MySQL, and Prisma. Full-stack with databases.</p>
+                    <div class="sample-features">
+                        <span>✅ MongoDB Example</span>
+                        <span>✅ PostgreSQL Example</span>
+                        <span>✅ MySQL Example</span>
+                        <span>✅ Prisma ORM</span>
+                    </div>
+                    <div class="sample-stats">
+                        <div class="stat">
+                            <strong>31</strong> files
+                        </div>
+                        <div class="stat">
+                            <strong>4</strong> databases
+                        </div>
+                        <div class="stat">
+                            <strong>20+</strong> APIs
+                        </div>
+                        <div class="stat">
+                            <strong>3</strong> pages
+                        </div>
+                    </div>
+                    <div class="sample-actions">
+                        <a href="https://github.com/upendra-manike/kora/tree/main/samples/database-crud" 
+                           class="btn btn-outline" target="_blank">View Code</a>
+                        <a href="#database-demo" class="btn btn-primary">Try It</a>
+                    </div>
+                </div>
             </div>
 
             <div class="samples-cta">
@@ -559,6 +592,140 @@ kora dev</code></pre>
                    class="btn btn-primary" target="_blank">View Full Code</a>
                 <a href="https://github.com/upendra-manike/kora/blob/main/samples/HOW_TO_USE.md" 
                    class="btn btn-outline" target="_blank">How to Use</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="database-demo" class="code-demo" style="background: var(--bg-light);">
+        <div class="container">
+            <h2>Database CRUD - Interactive Demo</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">
+                Complete CRUD operations with multiple database examples
+            </p>
+            
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="showDemoTab('db-create')">Create</button>
+                <button class="demo-tab" onclick="showDemoTab('db-read')">Read</button>
+                <button class="demo-tab" onclick="showDemoTab('db-update')">Update</button>
+                <button class="demo-tab" onclick="showDemoTab('db-delete')">Delete</button>
+            </div>
+
+            <div id="db-create" class="demo-content active">
+                <h3>Create User (MongoDB Example)</h3>
+                <pre><code>api createUser {
+  input {
+    name: String
+    email: Email
+    age: Number?
+    role: UserRole
+  }
+
+  output User
+
+  handler {
+    let user = {
+      id: UUID.generate(),
+      name: name,
+      email: email,
+      age: age,
+      role: role,
+      createdAt: Date.now()
+    }
+    return UserRepo.save(user)
+  }
+}</code></pre>
+                <p class="demo-note">✅ Same Kora code works with MongoDB, PostgreSQL, MySQL, or Prisma. Just implement the repository!</p>
+            </div>
+
+            <div id="db-read" class="demo-content">
+                <h3>Read Operations</h3>
+                <pre><code>// Get single user
+api getUser {
+  input { id: UUID }
+  output User
+  handler {
+    return UserRepo.findById(id)
+  }
+}
+
+// List users with filters
+api listUsers {
+  input {
+    role: UserRole?
+    minAge: Number?
+    search: String?
+    limit: Number?
+  }
+  output User[]
+  handler {
+    return UserRepo.findByFilters(role, minAge, search, limit)
+  }
+}</code></pre>
+                <p class="demo-note">✅ Query filtering handled in repository. Kora ensures type safety.</p>
+            </div>
+
+            <div id="db-update" class="demo-content">
+                <h3>Update User</h3>
+                <pre><code>api updateUser {
+  input {
+    id: UUID
+    name: String?
+    email: Email?
+    age: Number?
+  }
+  output User
+  handler {
+    let user = UserRepo.findById(id)
+    if (name != null) user.name = name
+    if (email != null) user.email = email
+    if (age != null) user.age = age
+    user.updatedAt = Date.now()
+    return UserRepo.save(user)
+  }
+}</code></pre>
+                <p class="demo-note">✅ Partial updates. Type-safe field updates.</p>
+            </div>
+
+            <div id="db-delete" class="demo-content">
+                <h3>Delete User</h3>
+                <pre><code>api deleteUser {
+  input { id: UUID }
+  output Boolean
+  handler {
+    UserRepo.delete(id)
+    return true
+  }
+}</code></pre>
+                <p class="demo-note">✅ Simple delete. Repository handles database-specific logic.</p>
+            </div>
+
+            <div class="demo-actions">
+                <a href="https://github.com/upendra-manike/kora/tree/main/samples/database-crud" 
+                   class="btn btn-primary" target="_blank">View All Database Examples</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/samples/database-crud/COMPLETE_GUIDE.md" 
+                   class="btn btn-outline" target="_blank">Complete Guide</a>
+            </div>
+
+            <div class="database-options" style="margin-top: 3rem; padding: 2rem; background: white; border-radius: 0.5rem;">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;">Available Database Examples</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>MongoDB</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">NoSQL database</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>PostgreSQL</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">SQL database</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>MySQL</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">SQL database</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>Prisma</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Type-safe ORM</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
