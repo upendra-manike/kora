@@ -1,0 +1,37 @@
+version: '3.8'
+
+# Caddy web server setup
+# Best for: Simple configuration, easy SSL upgrade later
+
+services:
+  caddy:
+    image: caddy:alpine
+    container_name: kora-caddy
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - kora-api
+    restart: unless-stopped
+    networks:
+      - kora-network
+
+  kora-api:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    container_name: kora-api
+    expose:
+      - "3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    networks:
+      - kora-network
+
+networks:
+  kora-network:
+    driver: bridge
+

@@ -1,0 +1,19 @@
+# Caddy configuration for Kora API
+# Simple reverse proxy without SSL
+
+localhost {
+    # API endpoints
+    reverse_proxy /api/* kora-api:3000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Health check
+    reverse_proxy /health kora-api:3000
+
+    # Root
+    respond / "Kora API Server"
+}
+
