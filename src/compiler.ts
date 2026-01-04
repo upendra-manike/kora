@@ -465,18 +465,34 @@ export class Compiler {
   /**
    * Compile JSX attribute
    */
-  private compileJsxAttribute(attr: JsxAttribute): string {
+  private compileJsxAttribute(attr: JsxAttribute, indent: number = 0, moduleName?: string): string {
+    const indentStr = ' '.repeat(indent);
+    
+    // Handle className - convert to styles object if CSS module exists
+    if (attr.name === 'className' && moduleName && typeof attr.value === 'string') {
+      // Extract class name from string (e.g., "card" from "card" or "card active")
+      const classNames = attr.value.split(' ').filter(c => c.trim()).map(c => c.replace(/^\./, ''));
+      if (classNames.length === 1) {
+        // Single class: styles.card
+        return `${indentStr}className={styles.${classNames[0]}}`;
+      } else if (classNames.length > 1) {
+        // Multiple classes: combine with template literal or array
+        const classNamesStr = classNames.map(c => `styles.${c}`).join(', ');
+        return `${indentStr}className={[${classNamesStr}].filter(Boolean).join(' ')}`;
+      }
+    }
+    
     if (attr.value === undefined || attr.value === true) {
-      return attr.name;
+      return `${indentStr}${attr.name}`;
     }
     if (typeof attr.value === 'string') {
-      return `${attr.name}="${attr.value}"`;
+      return `${indentStr}${attr.name}="${attr.value}"`;
     }
     if (typeof attr.value === 'boolean' && !attr.value) {
       return '';
     }
     // Expression
-    return `${attr.name}={${this.compileExpression(attr.value as Expression)}}`;
+    return `${indentStr}${attr.name}={${this.compileExpression(attr.value as Expression)}}`;
   }
 
   /**
