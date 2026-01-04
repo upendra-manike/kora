@@ -122,13 +122,26 @@ program
       const compiler = new Compiler();
       
       const ast = parser.parse(source);
-      const output = compiler.compile(ast);
+      const result = compiler.compile(ast);
       
       if (options.out) {
-        writeFileSync(options.out, output);
-        console.log(`✅ Compiled to ${options.out}`);
+        writeFileSync(options.out, result.typescript);
+        console.log(`✅ Compiled TypeScript to ${options.out}`);
+        
+        // Write CSS files
+        for (const [cssFile, cssContent] of result.css.entries()) {
+          const cssPath = options.out.replace(/\.tsx?$/, '') + '.module.css';
+          writeFileSync(cssPath, cssContent);
+          console.log(`✅ Compiled CSS to ${cssPath}`);
+        }
       } else {
-        console.log(output);
+        console.log(result.typescript);
+        if (result.css.size > 0) {
+          console.log('\n--- CSS Files ---');
+          for (const [cssFile, cssContent] of result.css.entries()) {
+            console.log(`\n// ${cssFile}\n${cssContent}`);
+          }
+        }
       }
     } catch (error: any) {
       console.error('❌ Error:', error.message);

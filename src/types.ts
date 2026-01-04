@@ -81,11 +81,45 @@ export interface UiModule {
 }
 
 /**
+ * CSS Rule
+ */
+export interface CssRule {
+  selector: string;
+  properties: CssProperty[];
+  mediaQuery?: string;
+}
+
+/**
+ * CSS Property
+ */
+export interface CssProperty {
+  name: string;
+  value: string;
+}
+
+/**
+ * Style Block
+ */
+export interface StyleBlock {
+  rules: CssRule[];
+}
+
+/**
+ * Global Styles Module
+ */
+export interface GlobalStylesModule {
+  kind: 'styles';
+  scope: 'global';
+  rules: CssRule[];
+}
+
+/**
  * Page module
  */
 export interface PageModule {
   kind: 'page';
   name: string;
+  styles?: StyleBlock;
   load?: {
     parameters: Parameter[];
     returnType: TypeAnnotation;
@@ -349,7 +383,7 @@ export interface ParenthesizedExpression {
 /**
  * Module (union type)
  */
-export type Module = DomainModule | ApiModule | UiModule | PageModule;
+export type Module = DomainModule | ApiModule | UiModule | PageModule | GlobalStylesModule;
 
 /**
  * Program (AST root)

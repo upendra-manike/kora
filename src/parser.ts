@@ -38,6 +38,10 @@ import type {
   JsxExpression,
   JsxAttribute,
   ParenthesizedExpression,
+  StyleBlock,
+  CssRule,
+  CssProperty,
+  GlobalStylesModule,
 } from './types';
 
 /**
@@ -77,8 +81,10 @@ export class Parser {
       return this.parseApiModule();
     } else if (this.check(TokenType.PAGE)) {
       return this.parsePageModule();
+    } else if (this.match(TokenType.STYLES, TokenType.GLOBAL)) {
+      return this.parseGlobalStylesModule();
     } else {
-      throw this.error('Expected module, api, or page declaration');
+      throw this.error('Expected module, api, page, or styles declaration');
     }
   }
 
@@ -290,16 +296,19 @@ export class Parser {
     const name = this.consumeIdentifier('Expected page name');
     this.consume(TokenType.LEFT_BRACE, 'Expected "{"');
 
+    let styles: StyleBlock | undefined;
     let load: { parameters: Parameter[]; returnType: TypeAnnotation } | undefined;
     let view: { parameters: Parameter[]; body: Block } | undefined;
 
     while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
-      if (this.match(TokenType.LOAD)) {
+      if (this.match(TokenType.STYLES)) {
+        styles = this.parseStyleBlock();
+      } else if (this.match(TokenType.LOAD)) {
         load = this.parseLoad();
       } else if (this.match(TokenType.VIEW)) {
         view = this.parseView();
       } else {
-        throw this.error('Expected load or view');
+        throw this.error('Expected styles, load, or view');
       }
     }
 
@@ -312,6 +321,7 @@ export class Parser {
     return {
       kind: 'page',
       name,
+      styles,
       load,
       view,
     };
@@ -899,6 +909,187 @@ export class Parser {
       return this.advance().value;
     }
     throw this.error(message);
+  }
+
+  /**
+   * Parse style block
+   */
+  private parseStyleBlock(): StyleBlock {
+    this.consume(TokenType.LEFT_BRACE, 'Expected "{"');
+    const rules: CssRule[] = [];
+    let currentMediaQuery: string | undefined;
+
+    while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+      // Check for @media
+      if (this.check(TokenType.IDENTIFIER) && this.peek().value === '@media') {
+        this.advance(); // consume '@media'
+        currentMediaQuery = this.parseMediaQuery();
+        this.consume(TokenType.LEFT_BRACE, 'Expected "{" after media query');
+      }
+
+      // Parse CSS rule
+      const selector = this.parseCssSelector();
+      this.consume(TokenType.LEFT_BRACE, 'Expected "{" after selector');
+      
+      const properties: CssProperty[] = [];
+      while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+        const property = this.parseCssProperty();
+        properties.push(property);
+      }
+      
+      this.consume(TokenType.RIGHT_BRACE, 'Expected "}" after properties');
+      
+      rules.push({
+        selector,
+        properties,
+        mediaQuery: currentMediaQuery,
+      });
+
+      // Reset media query after rule if we're closing the media block
+      if (currentMediaQuery && this.check(TokenType.RIGHT_BRACE)) {
+        const next = this.peekNext();
+        if (next && next.type === TokenType.RIGHT_BRACE) {
+          this.advance(); // consume closing brace of media query
+          currentMediaQuery = undefined;
+        }
+      }
+    }
+
+    this.consume(TokenType.RIGHT_BRACE, 'Expected "}"');
+    return { rules };
+  }
+
+  /**
+   * Parse CSS selector
+   */
+  private parseCssSelector(): string {
+    let selector = '';
+    
+    // Handle pseudo-selectors like :root, :hover
+    if (this.match(TokenType.COLON)) {
+      selector = ':' + this.consumeIdentifier('Expected pseudo-selector name');
+      return selector;
+    }
+    
+    // Handle class selector (.className)
+    if (this.match(TokenType.DOT)) {
+      selector = '.' + this.consumeIdentifier('Expected class name');
+    } else if (this.check(TokenType.IDENTIFIER)) {
+      selector = this.consumeIdentifier('Expected selector');
+    } else {
+      throw this.error('Expected CSS selector');
+    }
+
+    // Handle compound selectors (.class1.class2)
+    while (this.match(TokenType.DOT)) {
+      selector += '.' + this.consumeIdentifier('Expected class name');
+    }
+
+    // Handle pseudo-classes (.class:hover)
+    if (this.match(TokenType.COLON)) {
+      selector += ':' + this.consumeIdentifier('Expected pseudo-class name');
+    }
+
+    return selector;
+  }
+
+  /**
+   * Parse CSS property
+   */
+  private parseCssProperty(): CssProperty {
+    const name = this.consumeIdentifier('Expected property name');
+    this.consume(TokenType.COLON, 'Expected ":"');
+    
+    // Parse value (can be string, number, identifier, or expression)
+    let value = '';
+    while (!this.check(TokenType.SEMICOLON) && !this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+      if (this.check(TokenType.STRING)) {
+        value += this.consume(TokenType.STRING, 'Expected string').value;
+      } else if (this.check(TokenType.NUMBER)) {
+        value += this.consume(TokenType.NUMBER, 'Expected number').value;
+      } else if (this.check(TokenType.IDENTIFIER)) {
+        value += this.consume(TokenType.IDENTIFIER, 'Expected identifier').value;
+      } else {
+        value += this.advance().value;
+      }
+      // Add space between tokens in value if not at end
+      if (!this.check(TokenType.SEMICOLON) && !this.check(TokenType.RIGHT_BRACE)) {
+        value += ' ';
+      }
+    }
+    
+    this.consume(TokenType.SEMICOLON, 'Expected ";" after property value');
+    
+    return {
+      name: name.trim(),
+      value: value.trim(),
+    };
+  }
+
+  /**
+   * Parse media query
+   */
+  private parseMediaQuery(): string {
+    let query = '';
+    this.consume(TokenType.LEFT_PAREN, 'Expected "("');
+    
+    while (!this.check(TokenType.RIGHT_PAREN) && !this.isAtEnd()) {
+      query += this.advance().value;
+    }
+    
+    this.consume(TokenType.RIGHT_PAREN, 'Expected ")"');
+    return query.trim();
+  }
+
+  /**
+   * Parse global styles module
+   */
+  private parseGlobalStylesModule(): GlobalStylesModule {
+    this.consume(TokenType.LEFT_BRACE, 'Expected "{"');
+    const rules: CssRule[] = [];
+    let currentMediaQuery: string | undefined;
+
+    while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+      // Check for @media
+      if (this.check(TokenType.IDENTIFIER) && this.peek().value === '@media') {
+        this.advance();
+        currentMediaQuery = this.parseMediaQuery();
+        this.consume(TokenType.LEFT_BRACE, 'Expected "{" after media query');
+      }
+
+      // Parse selector (can be :root, body, etc.)
+      const selector = this.parseCssSelector();
+      this.consume(TokenType.LEFT_BRACE, 'Expected "{" after selector');
+      
+      const properties: CssProperty[] = [];
+      while (!this.check(TokenType.RIGHT_BRACE) && !this.isAtEnd()) {
+        const property = this.parseCssProperty();
+        properties.push(property);
+      }
+      
+      this.consume(TokenType.RIGHT_BRACE, 'Expected "}" after properties');
+      
+      rules.push({
+        selector,
+        properties,
+        mediaQuery: currentMediaQuery,
+      });
+
+      if (currentMediaQuery && this.check(TokenType.RIGHT_BRACE)) {
+        const next = this.peekNext();
+        if (next && next.type === TokenType.RIGHT_BRACE) {
+          this.advance(); // Close media query
+          currentMediaQuery = undefined;
+        }
+      }
+    }
+
+    this.consume(TokenType.RIGHT_BRACE, 'Expected "}"');
+    return {
+      kind: 'styles',
+      scope: 'global',
+      rules,
+    };
   }
 
   /**

@@ -27,24 +27,67 @@ import type {
   ForStatement,
   ExpressionStatement,
   Assignment,
+  StyleBlock,
+  CssRule,
+  CssProperty,
+  GlobalStylesModule,
 } from './types';
+
+/**
+ * Compiler output
+ */
+export interface CompilerOutput {
+  typescript: string;
+  css: Map<string, string>; // filename -> CSS content
+}
+
+/**
+ * Compiler output
+ */
+export interface CompilerOutput {
+  typescript: string;
+  css: Map<string, string>; // filename -> CSS content
+}
 
 /**
  * Compiler for Kora language
  */
 export class Compiler {
   /**
-   * Compile Kora program to TypeScript
+   * Compile Kora program to TypeScript and CSS
    */
-  compile(program: Program): string {
+  compile(program: Program): CompilerOutput {
     const output: string[] = [];
+    const cssFiles = new Map<string, string>();
 
     for (const module of program.modules) {
+      if (module.kind === 'page' && module.styles) {
+        // Generate CSS file for page with styles
+        const cssModuleName = `${module.name.toLowerCase().replace(/([A-Z])/g, '-$1').toLowerCase()}.module.css`;
+        const css = this.compileCss(module.styles, module.name);
+        cssFiles.set(cssModuleName, css);
+      } else if (module.kind === 'styles') {
+        // Generate global CSS file
+        const css = this.compileGlobalStylesModule(module);
+        cssFiles.set('global.css', css);
+      }
+      
       output.push(this.compileModule(module));
       output.push(''); // Empty line between modules
     }
 
-    return output.join('\n');
+    return {
+      typescript: output.join('\n'),
+      css: cssFiles,
+    };
+  }
+
+  /**
+   * Compile Kora program to TypeScript (legacy method for backward compatibility)
+   */
+  compileLegacy(program: Program): string {
+    const result = this.compile(program);
+    return result.typescript;
   }
 
   /**
@@ -60,7 +103,99 @@ export class Compiler {
         return this.compileUiModule(module);
       case 'page':
         return this.compilePageModule(module);
+      case 'styles':
+        return this.compileGlobalStylesModule(module);
     }
+  }
+
+  /**
+   * Compile CSS from style block
+   */
+  compileCss(styleBlock: StyleBlock, moduleName: string): string {
+    const output: string[] = [];
+    const hash = this.generateHash(moduleName);
+    const prefix = `${moduleName.toLowerCase().replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+
+    for (const rule of styleBlock.rules) {
+      if (rule.mediaQuery) {
+        output.push(`@media ${rule.mediaQuery} {`);
+      }
+
+      // Scoped selector
+      const scopedSelector = this.scopeSelector(rule.selector, prefix, hash);
+      output.push(`  ${scopedSelector} {`);
+
+      for (const property of rule.properties) {
+        output.push(`    ${property.name}: ${property.value};`);
+      }
+
+      output.push('  }');
+
+      if (rule.mediaQuery) {
+        output.push('}');
+      }
+    }
+
+    return output.join('\n');
+  }
+
+  /**
+   * Scope CSS selector
+   */
+  private scopeSelector(selector: string, prefix: string, hash: string): string {
+    // Handle :root and other pseudo-selectors
+    if (selector.startsWith(':')) {
+      return selector;
+    }
+
+    // Handle class selectors
+    if (selector.startsWith('.')) {
+      const className = selector.substring(1);
+      return `.${prefix}_${className}__${hash}`;
+    }
+
+    // Handle element selectors
+    return `${selector}.${prefix}__${hash}`;
+  }
+
+  /**
+   * Generate hash for scoping
+   */
+  private generateHash(str: string): string {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash).toString(36).substring(0, 6);
+  }
+
+  /**
+   * Compile global styles module
+   */
+  private compileGlobalStylesModule(module: GlobalStylesModule): string {
+    const output: string[] = [];
+
+    for (const rule of module.rules) {
+      if (rule.mediaQuery) {
+        output.push(`@media ${rule.mediaQuery} {`);
+      }
+
+      output.push(`${rule.selector} {`);
+
+      for (const property of rule.properties) {
+        output.push(`  ${property.name}: ${property.value};`);
+      }
+
+      output.push('}');
+
+      if (rule.mediaQuery) {
+        output.push('}');
+      }
+    }
+
+    return output.join('\n');
   }
 
   /**
@@ -149,6 +284,12 @@ export class Compiler {
 
     // Add React import
     output.push("import React from 'react';");
+    
+    // Add CSS module import if styles exist
+    if (module.styles) {
+      const cssModuleName = `${module.name.toLowerCase().replace(/([A-Z])/g, '-$1').toLowerCase()}.module.css`;
+      output.push(`import styles from './${cssModuleName}';`);
+    }
     output.push('');
 
     // Compile load function
@@ -174,7 +315,8 @@ export class Compiler {
     output.push('  return (');
     
     if (module.view.body) {
-      const jsx = this.compileJsxContent(module.view.body.statements, 4);
+      // Replace className references with styles object if CSS module exists
+      const jsx = this.compileJsxContent(module.view.body.statements, 4, module.styles ? module.name : undefined);
       output.push(jsx);
     }
     
@@ -216,7 +358,7 @@ export class Compiler {
       case 'expression':
         return this.compileExpressionStatement(statement);
       case 'jsx':
-        return this.compileJsxElement(statement);
+        return this.compileJsxElement(statement, 0);
       default:
         return '// Unknown statement';
     }
@@ -304,16 +446,20 @@ export class Compiler {
   /**
    * Compile JSX element
    */
-  private compileJsxElement(element: JsxElement): string {
-    const attrs = element.attributes.map(attr => this.compileJsxAttribute(attr)).join(' ');
+  private compileJsxElement(element: JsxElement, indent: number = 0, moduleName?: string): string {
+    const indentStr = ' '.repeat(indent);
+    const attrs = element.attributes.map(attr => this.compileJsxAttribute(attr, indent, moduleName)).filter(a => a).join(' ');
     const tag = element.tag;
     
     if (element.selfClosing) {
-      return `<${tag}${attrs ? ' ' + attrs : ''} />`;
+      return `${indentStr}<${tag}${attrs ? ' ' + attrs : ''} />`;
     }
 
-    const children = element.children.map(child => this.compileJsxChild(child)).join('\n');
-    return `<${tag}${attrs ? ' ' + attrs : ''}>${children ? '\n' + children + '\n' : ''}</${tag}>`;
+    const children = element.children.map(child => this.compileJsxChild(child, indent + 2, moduleName)).filter(c => c).join('\n');
+    if (children) {
+      return `${indentStr}<${tag}${attrs ? ' ' + attrs : ''}>\n${children}\n${indentStr}</${tag}>`;
+    }
+    return `${indentStr}<${tag}${attrs ? ' ' + attrs : ''}></${tag}>`;
   }
 
   /**
@@ -336,15 +482,16 @@ export class Compiler {
   /**
    * Compile JSX child
    */
-  private compileJsxChild(child: JsxContent): string {
+  private compileJsxChild(child: JsxContent, indent: number = 0, moduleName?: string): string {
     if (child.kind === 'jsx') {
-      return this.compileJsxElement(child);
+      return this.compileJsxElement(child, indent, moduleName);
     }
     if (child.kind === 'jsx-text') {
-      return child.value;
+      const text = child.value.trim();
+      return text ? ' '.repeat(indent) + text : '';
     }
     if (child.kind === 'jsx-expression') {
-      return `{${this.compileExpression(child.expression)}}`;
+      return ' '.repeat(indent) + `{${this.compileExpression(child.expression)}}`;
     }
     return '';
   }
