@@ -82,6 +82,9 @@ export async function startDevServer(options: DevOptions = {}): Promise<void> {
       
       if (result.success) {
         console.log(chalk.green(`✅ Built: ${result.files} file(s)`));
+      } else {
+        console.error(chalk.red('❌ Build failed:'));
+        result.errors.forEach(e => console.error(chalk.red(`   ${e}`)));
       }
     } catch (error: any) {
       console.error(chalk.red(`❌ Error: ${error.message}`));
