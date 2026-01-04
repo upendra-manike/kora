@@ -1,0 +1,194 @@
+(*
+ * Kora Language Grammar (BNF)
+ * 
+ * Kora is a full-stack programming language that compiles to TypeScript/JavaScript.
+ * This grammar defines the syntax for domain, API, and UI modules.
+ *)
+
+(* ============================================================================
+ * Top-Level Structure
+ * ============================================================================ *)
+
+program ::= module_declaration*
+
+module_declaration ::= domain_module | api_module | ui_module | page_module
+
+(* ============================================================================
+ * Domain Module
+ * ============================================================================ *)
+
+domain_module ::= "module" "domain" identifier module_body
+
+module_body ::= "{" (type_declaration | constant_declaration)* "}"
+
+type_declaration ::= "type" identifier type_body
+
+type_body ::= "{" field_declaration* "}"
+
+field_declaration ::= identifier ":" type_annotation
+
+type_annotation ::= primitive_type | custom_type | generic_type | optional_type
+
+primitive_type ::= "String" | "Number" | "Boolean" | "UUID" | "Email" | "Date" | "Void"
+
+custom_type ::= identifier
+
+generic_type ::= identifier "<" type_annotation ("," type_annotation)* ">"
+
+optional_type ::= type_annotation "?"
+
+constant_declaration ::= "const" identifier ":" type_annotation "=" expression
+
+(* ============================================================================
+ * API Module
+ * ============================================================================ *)
+
+api_module ::= "api" identifier api_body
+
+api_body ::= "{" api_input? api_output? api_handler? "}"
+
+api_input ::= "input" "{" field_declaration* "}"
+
+api_output ::= "output" type_annotation
+
+api_handler ::= "handler" block
+
+(* ============================================================================
+ * UI Module
+ * ============================================================================ *)
+
+ui_module ::= "module" "ui" identifier module_body
+
+(* ============================================================================
+ * Page Module
+ * ============================================================================ *)
+
+page_module ::= "page" identifier page_body
+
+page_body ::= "{" page_load? page_view "}"
+
+page_load ::= "load" "(" parameter_list? ")" "->" type_annotation
+
+page_view ::= "view" "(" parameter_list? ")" block
+
+parameter_list ::= parameter ("," parameter)*
+
+parameter ::= identifier ":" type_annotation
+
+(* ============================================================================
+ * Statements and Expressions
+ * ============================================================================ *)
+
+block ::= "{" statement* "}"
+
+statement ::= variable_declaration
+            | assignment
+            | return_statement
+            | if_statement
+            | for_statement
+            | expression_statement
+            | jsx_element
+
+variable_declaration ::= "let" identifier (":" type_annotation)? "=" expression
+
+assignment ::= identifier "=" expression
+
+return_statement ::= "return" expression?
+
+if_statement ::= "if" "(" expression ")" block ("else" block)?
+
+for_statement ::= "for" "(" identifier "in" expression ")" block
+
+expression_statement ::= expression ";"
+
+expression ::= binary_expression
+             | unary_expression
+             | function_call
+             | member_access
+             | identifier
+             | literal
+             | jsx_element
+             | parenthesized_expression
+
+binary_expression ::= expression binary_operator expression
+
+binary_operator ::= "+" | "-" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">=" | "&&" | "||"
+
+unary_expression ::= unary_operator expression
+
+unary_operator ::= "!" | "-"
+
+function_call ::= identifier "(" argument_list? ")"
+
+argument_list ::= expression ("," expression)*
+
+member_access ::= expression "." identifier
+
+parenthesized_expression ::= "(" expression ")"
+
+literal ::= string_literal | number_literal | boolean_literal | null_literal
+
+string_literal ::= '"' string_content '"' | "'" string_content "'"
+
+string_content ::= (character | escape_sequence)*
+
+number_literal ::= integer | float
+
+boolean_literal ::= "true" | "false"
+
+null_literal ::= "null" | "undefined"
+
+(* ============================================================================
+ * JSX (for UI)
+ * ============================================================================ *)
+
+jsx_element ::= jsx_self_closing | jsx_opening
+
+jsx_self_closing ::= "<" jsx_tag_name jsx_attributes? "/>"
+
+jsx_opening ::= "<" jsx_tag_name jsx_attributes? ">" jsx_content "</" jsx_tag_name ">"
+
+jsx_tag_name ::= identifier | jsx_component_name
+
+jsx_component_name ::= identifier
+
+jsx_attributes ::= jsx_attribute+
+
+jsx_attribute ::= jsx_attribute_name "=" jsx_attribute_value
+                | jsx_attribute_name
+
+jsx_attribute_name ::= identifier
+
+jsx_attribute_value ::= string_literal
+                      | "{" expression "}"
+                      | boolean_literal
+
+jsx_content ::= (jsx_element | jsx_text | jsx_expression)*
+
+jsx_text ::= text_content
+
+jsx_expression ::= "{" expression "}"
+
+(* ============================================================================
+ * Identifiers and Basic Tokens
+ * ============================================================================ *)
+
+identifier ::= letter (letter | digit | "_")*
+
+letter ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+         | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+         | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M"
+         | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+
+digit ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+integer ::= digit+
+
+float ::= digit+ "." digit+
+
+escape_sequence ::= "\\" (character | "n" | "t" | "r" | "\\" | '"' | "'")
+
+character ::= (* any printable character except quotes and backslash *)
+
+text_content ::= (* any text content for JSX *)
+

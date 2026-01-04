@@ -1,0 +1,55 @@
+{
+  "name": "kora",
+  "version": "0.1.0",
+  "description": "Kora - A full-stack programming language that compiles to TypeScript/JavaScript",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "kora": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CODE_OF_CONDUCT.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test",
+    "check": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "kora",
+    "programming-language",
+    "compiler",
+    "typescript",
+    "full-stack",
+    "language",
+    "web-development",
+    "react",
+    "nextjs"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kora-lang/kora.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kora-lang/kora/issues"
+  },
+  "homepage": "https://github.com/kora-lang/kora#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  }
+}
+

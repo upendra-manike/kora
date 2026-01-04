@@ -1,0 +1,11 @@
+src/
+examples/
+grammar/
+docs/
+tsconfig.json
+.gitignore
+*.md
+!README.md
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+

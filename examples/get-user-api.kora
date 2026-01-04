@@ -1,0 +1,18 @@
+(*
+ * Example: Get User API
+ * 
+ * This demonstrates how to define API endpoints in Kora.
+ *)
+
+api getUser {
+  input {
+    id: UUID
+  }
+
+  output User
+
+  handler {
+    return UserRepo.find(id)
+  }
+}
+

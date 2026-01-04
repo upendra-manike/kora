@@ -1,0 +1,18 @@
+(*
+ * Example: User Profile Page
+ * 
+ * This demonstrates how to define UI pages in Kora.
+ *)
+
+page UserProfile {
+  load(id: UUID) -> User
+
+  view(user: User) {
+    <div className="profile">
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+      <ProfileCard user={user} />
+    </div>
+  }
+}
+
