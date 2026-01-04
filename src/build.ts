@@ -51,7 +51,7 @@ function findKoraFiles(dir: string): string[] {
 /**
  * Build a single Kora file
  */
-function buildFile(filePath: string, outDir: string): { success: boolean; error?: string } {
+function buildFile(filePath: string, srcDir: string, outDir: string): { success: boolean; error?: string } {
   try {
     const source = readFileSync(filePath, 'utf-8');
     const parser = new Parser();
@@ -60,8 +60,8 @@ function buildFile(filePath: string, outDir: string): { success: boolean; error?
     const ast = parser.parse(source);
     const result = compiler.compile(ast);
     
-    // Determine output path
-    const relativePath = relative(process.cwd(), filePath);
+    // Determine output path relative to srcDir
+    const relativePath = relative(srcDir, filePath);
     const baseName = relativePath.replace(/\.kora$/, '');
     const tsOutputPath = join(outDir, baseName + '.ts');
     const tsOutputDir = dirname(tsOutputPath);
@@ -117,7 +117,7 @@ export async function buildProject(options: BuildOptions = {}): Promise<BuildRes
   // Build each file
   let successCount = 0;
   for (const file of koraFiles) {
-    const result = buildFile(file, outDir);
+    const result = buildFile(file, srcDir, outDir);
     if (result.success) {
       successCount++;
     } else {
