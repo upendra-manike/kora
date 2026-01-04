@@ -4,10 +4,10 @@
  * A full-stack programming language that compiles to TypeScript/JavaScript.
  */
 
-export * from './compiler';
-export * from './parser';
-export * from './tokenizer';
-export * from './types';
-export * from './build';
-export * from './dev';
+export * from './compiler.js';
+export * from './parser.js';
+export * from './tokenizer.js';
+export * from './types.js';
+export * from './build.js';
+export * from './dev.js';
 

@@ -6,8 +6,8 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'fs';
 import { join, dirname, extname, relative } from 'path';
-import { Parser } from './parser';
-import { Compiler } from './compiler';
+import { Parser } from './parser.js';
+import { Compiler } from './compiler.js';
 
 export interface BuildOptions {
   srcDir?: string;

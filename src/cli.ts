@@ -9,10 +9,10 @@
 import { Command } from 'commander';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join } from 'path';
-import { Parser } from './parser';
-import { Compiler } from './compiler';
-import { buildProject } from './build';
-import { startDevServer } from './dev';
+import { Parser } from './parser.js';
+import { Compiler } from './compiler.js';
+import { buildProject } from './build.js';
+import { startDevServer } from './dev.js';
 
 const program = new Command();
 

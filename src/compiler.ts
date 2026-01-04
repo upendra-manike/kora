@@ -31,7 +31,7 @@ import type {
   CssRule,
   CssProperty,
   GlobalStylesModule,
-} from './types';
+} from './types.js';
 
 /**
  * Compiler output

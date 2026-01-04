@@ -5,7 +5,7 @@
  */
 
 import { watch } from 'chokidar';
-import { buildProject, BuildOptions } from './build';
+import { buildProject, BuildOptions } from './build.js';
 import chalk from 'chalk';
 
 export interface DevOptions extends BuildOptions {

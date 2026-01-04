@@ -4,7 +4,7 @@
  * Parses Kora source code into an Abstract Syntax Tree (AST).
  */
 
-import { Tokenizer, Token, TokenType } from './tokenizer';
+import { Tokenizer, Token, TokenType } from './tokenizer.js';
 import type {
   Program,
   Module,
@@ -42,7 +42,7 @@ import type {
   CssRule,
   CssProperty,
   GlobalStylesModule,
-} from './types';
+} from './types.js';
 
 /**
  * Parser for Kora language
@@ -827,13 +827,14 @@ export class Parser {
    * Check if current token matches any of the given types
    */
   private match(...types: TokenType[]): boolean {
-    for (const type of types) {
-      if (this.check(type)) {
-        this.advance();
-        return true;
+    // Check if all types match in sequence
+    for (let i = 0; i < types.length; i++) {
+      if (!this.check(types[i])) {
+        return false;
       }
+      this.advance();
     }
-    return false;
+    return true;
   }
 
   /**
