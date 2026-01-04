@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kora - Full-Stack Programming Language</title>
+    <meta name="description" content="Kora is a full-stack programming language that compiles to TypeScript/JavaScript. Learn how to use Kora to build UI and Backend together with architectural discipline by default.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🟢</text></svg>">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="logo">🟢</span>
+                <span class="brand-name">Kora</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#tutorial">Tutorial</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#install">Install</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1 class="hero-title">Kora</h1>
+            <p class="hero-subtitle">A full-stack programming language that compiles to TypeScript/JavaScript</p>
+            <p class="hero-description">
+                Build UI and Backend together with <strong>architectural discipline by default</strong>.
+                One language, three concerns, zero glue code.
+            </p>
+            <div class="hero-buttons">
+                <a href="#install" class="btn btn-primary">Get Started</a>
+                <a href="https://github.com/upendra-manike/kora" class="btn btn-secondary" target="_blank">GitHub</a>
+                <a href="https://www.npmjs.com/package/@kora-lang/kora" class="btn btn-secondary" target="_blank">npm</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Why Kora?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏗️</div>
+                    <h3>Architectural Boundaries</h3>
+                    <p>Enforced module boundaries. Illegal imports are compiler errors, not conventions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Type Safety</h3>
+                    <p>Shared types across UI and Backend. Compile-time guarantees, no runtime surprises.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Zero Glue Code</h3>
+                    <p>No fetch boilerplate, no DTO duplication, no Swagger drift. The compiler handles it.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Standard Output</h3>
+                    <p>Compiles to standard TypeScript/JavaScript. Works with React, Next.js, Node.js.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Convention Over Configuration</h3>
+                    <p>Sensible defaults. Less configuration, more building.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Eject Anytime</h3>
+                    <p>Output is standard code. Debug, modify, or eject to pure TypeScript anytime.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="install" class="install">
+        <div class="container">
+            <h2>Installation</h2>
+            <div class="install-content">
+                <div class="install-code">
+                    <h3>Global Installation</h3>
+                    <pre><code>npm install -g @kora-lang/kora</code></pre>
+                </div>
+                <div class="install-code">
+                    <h3>Or Use with npx</h3>
+                    <pre><code>npx @kora-lang/kora new my-app</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tutorial" class="tutorial">
+        <div class="container">
+            <h2>How to Use Kora</h2>
+            
+            <div class="tutorial-step">
+                <h3>Step 1: Define Your Domain</h3>
+                <p>Start by defining your data models in a domain module:</p>
+                <pre><code>module domain Post {
+  type Post {
+    id: UUID
+    title: String
+    content: String
+    author: Author
+    createdAt: Date
+  }
+
+  type Author {
+    id: UUID
+    name: String
+    email: Email
+  }
+}</code></pre>
+                <p class="step-note">✅ The compiler generates TypeScript interfaces automatically.</p>
+            </div>
+
+            <div class="tutorial-step">
+                <h3>Step 2: Create API Endpoints</h3>
+                <p>Define your API with input/output types:</p>
+                <pre><code>api getPost {
+  input {
+    id: UUID
+  }
+
+  output Post
+
+  handler {
+    return PostRepo.find(id)
+  }
+}</code></pre>
+                <p class="step-note">✅ The compiler generates API routes and handler functions.</p>
+            </div>
+
+            <div class="tutorial-step">
+                <h3>Step 3: Build UI Pages</h3>
+                <p>Create pages that automatically connect to your APIs:</p>
+                <pre><code>page PostDetail {
+  load(id: UUID) -> Post
+
+  view(post: Post) {
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+      <p>By {post.author.name}</p>
+    </div>
+  }
+}</code></pre>
+                <p class="step-note">✅ The compiler generates React components and connects them to APIs automatically.</p>
+            </div>
+
+            <div class="tutorial-step">
+                <h3>Step 4: Compile and Use</h3>
+                <pre><code># Check your code
+kora check src/domain/post.kora
+
+# Compile to TypeScript
+kora build
+
+# Start development
+kora dev</code></pre>
+                <p class="step-note">✅ Import the generated code in your Next.js/React app from the <code>dist/</code> directory.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="examples" class="examples">
+        <div class="container">
+            <h2>Example: Complete Blog App</h2>
+            <p>Here's a complete example showing all three layers working together:</p>
+            
+            <div class="example-tabs">
+                <button class="tab-btn active" onclick="showTab('domain')">Domain</button>
+                <button class="tab-btn" onclick="showTab('api')">API</button>
+                <button class="tab-btn" onclick="showTab('ui')">UI</button>
+                <button class="tab-btn" onclick="showTab('output')">Output</button>
+            </div>
+
+            <div id="domain-tab" class="tab-content active">
+                <pre><code>module domain Post {
+  type Post {
+    id: UUID
+    title: String
+    content: String
+    author: Author
+    createdAt: Date
+  }
+}</code></pre>
+            </div>
+
+            <div id="api-tab" class="tab-content">
+                <pre><code>api getPost {
+  input { id: UUID }
+  output Post
+  handler {
+    return PostRepo.find(id)
+  }
+}</code></pre>
+            </div>
+
+            <div id="ui-tab" class="tab-content">
+                <pre><code>page PostDetail {
+  load(id: UUID) -> Post
+  view(post: Post) {
+    <h1>{post.title}</h1>
+    <p>{post.content}</p>
+  }
+}</code></pre>
+            </div>
+
+            <div id="output-tab" class="tab-content">
+                <pre><code>// Generated TypeScript
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  author: Author;
+  createdAt: Date;
+}
+
+export async function getPostHandler(
+  input: { id: string }
+): Promise<Post | undefined> {
+  return PostRepo.find(input.id);
+}
+
+export function PostDetail({ post }: { post: Post }) {
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </div>
+  );
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="comparison">
+        <div class="container">
+            <h2>Traditional vs Kora</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h3>Traditional Stack</h3>
+                    <ul>
+                        <li>❌ TypeScript interfaces (duplicated)</li>
+                        <li>❌ API route handlers (manual)</li>
+                        <li>❌ Fetch calls in components</li>
+                        <li>❌ Type definitions everywhere</li>
+                        <li>❌ Validation logic scattered</li>
+                        <li>❌ ~40 lines per feature</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <h3>Kora</h3>
+                    <ul>
+                        <li>✅ Types defined once</li>
+                        <li>✅ APIs auto-generated</li>
+                        <li>✅ No fetch boilerplate</li>
+                        <li>✅ Types shared automatically</li>
+                        <li>✅ Validation built-in</li>
+                        <li>✅ ~10 lines per feature</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Get Started?</h2>
+            <p>Install Kora and start building with architectural discipline by default.</p>
+            <div class="cta-buttons">
+                <a href="#install" class="btn btn-primary">Install Now</a>
+                <a href="https://github.com/upendra-manike/kora" class="btn btn-secondary" target="_blank">View on GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Kora Language. Licensed under Apache 2.0.</p>
+            <div class="footer-links">
+                <a href="https://github.com/upendra-manike/kora" target="_blank">GitHub</a>
+                <a href="https://www.npmjs.com/package/@kora-lang/kora" target="_blank">npm</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/README.md" target="_blank">Documentation</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
