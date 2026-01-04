@@ -1,0 +1,30 @@
+module domain Product {
+  type Product {
+    id: UUID
+    name: String
+    description: String
+    price: Number
+    image: String
+    category: Category
+    inStock: Boolean
+    stockCount: Number
+    rating: Number
+    reviews: Review[]
+    createdAt: Date
+  }
+
+  type Category {
+    id: UUID
+    name: String
+    slug: String
+  }
+
+  type Review {
+    id: UUID
+    userId: UUID
+    rating: Number
+    comment: String
+    createdAt: Date
+  }
+}
+

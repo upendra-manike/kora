@@ -1,0 +1,25 @@
+api addToCart {
+  input {
+    userId: UUID
+    productId: UUID
+    quantity: Number
+  }
+
+  output Cart
+
+  handler {
+    let cart = CartRepo.findByUser(userId)
+    if (cart == null) {
+      cart = CartRepo.create(userId)
+    }
+    
+    let product = ProductRepo.find(productId)
+    if (product == null || !product.inStock) {
+      throw Error("Product not available")
+    }
+    
+    CartRepo.addItem(cart.id, productId, quantity, product.price)
+    return CartRepo.findByUser(userId)
+  }
+}
+

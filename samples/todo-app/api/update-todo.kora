@@ -1,0 +1,35 @@
+api updateTodo {
+  input {
+    id: UUID
+    title: String?
+    description: String?
+    completed: Boolean?
+    priority: Priority?
+  }
+
+  output Todo
+
+  handler {
+    let todo = TodoRepo.find(id)
+    if (todo == null) {
+      throw Error("Todo not found")
+    }
+    
+    if (title != null) {
+      todo.title = title
+    }
+    if (description != null) {
+      todo.description = description
+    }
+    if (completed != null) {
+      todo.completed = completed
+    }
+    if (priority != null) {
+      todo.priority = priority
+    }
+    
+    todo.updatedAt = Date.now()
+    return TodoRepo.save(todo)
+  }
+}
+

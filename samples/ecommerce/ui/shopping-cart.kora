@@ -1,0 +1,36 @@
+page ShoppingCart {
+  load(userId: UUID) -> Cart
+
+  view(cart: Cart) {
+    <div className="shopping-cart">
+      <h1>Shopping Cart</h1>
+      {if cart.items.length == 0 {
+        <p>Your cart is empty</p>
+      } else {
+        <div className="cart-items">
+          {for item in cart.items {
+            <div key={item.productId} className="cart-item">
+              <ProductSummary productId={item.productId} />
+              <div className="quantity">
+                Quantity: {item.quantity}
+              </div>
+              <div className="item-total">
+                ${item.price * item.quantity}
+              </div>
+              <button onClick={() => removeFromCart(item.productId)}>
+                Remove
+              </button>
+            </div>
+          }}
+        </div>
+        <div className="cart-summary">
+          <h2>Total: ${cart.total}</h2>
+          <a href="/checkout" className="checkout-btn">
+            Proceed to Checkout
+          </a>
+        </div>
+      }}
+    </div>
+  }
+}
+

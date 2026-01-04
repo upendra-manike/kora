@@ -1,0 +1,45 @@
+page PostDetail {
+  load(slug: String) -> Post
+
+  view(post: Post) {
+    <div className="post-detail">
+      <article>
+        <h1>{post.title}</h1>
+        <div className="meta">
+          <span>By {post.author.name}</span>
+          <span>{post.publishedAt}</span>
+          <span>{post.category.name}</span>
+        </div>
+        <div className="content">
+          {post.content}
+        </div>
+        <div className="tags">
+          {for tag in post.tags {
+            <span key={tag.id} className="tag">{tag.name}</span>
+          }}
+        </div>
+      </article>
+      
+      <section className="comments">
+        <h2>Comments ({post.comments.length})</h2>
+        {for comment in post.comments {
+          <div key={comment.id} className="comment">
+            <div className="comment-author">
+              <img src={comment.author.avatar} alt={comment.author.name} />
+              <span>{comment.author.name}</span>
+            </div>
+            <p>{comment.content}</p>
+            <div className="comment-meta">
+              <span>{comment.createdAt}</span>
+              <button onClick={() => likeComment(comment.id)}>
+                Like ({comment.likes})
+              </button>
+            </div>
+          </div>
+        }}
+        <CommentForm postId={post.id} />
+      </section>
+    </div>
+  }
+}
+

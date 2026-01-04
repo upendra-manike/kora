@@ -1,0 +1,13 @@
+api listTodos {
+  input {
+    completed: Boolean?
+    priority: Priority?
+  }
+
+  output Todo[]
+
+  handler {
+    return TodoRepo.findAll(completed, priority)
+  }
+}
+

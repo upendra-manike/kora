@@ -1,0 +1,23 @@
+api createTodo {
+  input {
+    title: String
+    description: String?
+    priority: Priority
+  }
+
+  output Todo
+
+  handler {
+    let todo = {
+      id: UUID.generate(),
+      title: title,
+      description: description,
+      completed: false,
+      priority: priority,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+    return TodoRepo.save(todo)
+  }
+}
+

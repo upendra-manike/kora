@@ -1,0 +1,16 @@
+api getProduct {
+  input {
+    id: UUID
+  }
+
+  output Product
+
+  handler {
+    let product = ProductRepo.find(id)
+    if (product == null) {
+      throw Error("Product not found")
+    }
+    return product
+  }
+}
+
