@@ -306,6 +306,39 @@ kora dev</code></pre>
                         <a href="#database-demo" class="btn btn-primary">Try It</a>
                     </div>
                 </div>
+
+                <div class="sample-card">
+                    <div class="sample-header">
+                        <span class="sample-badge advanced">Security</span>
+                        <h3>🔐 Security & Routing</h3>
+                    </div>
+                    <p>Complete authentication, authorization, route protection, and security best practices. Production-ready security.</p>
+                    <div class="sample-features">
+                        <span>✅ Authentication</span>
+                        <span>✅ Authorization (RBAC)</span>
+                        <span>✅ Route Protection</span>
+                        <span>✅ JWT Tokens</span>
+                    </div>
+                    <div class="sample-stats">
+                        <div class="stat">
+                            <strong>18</strong> files
+                        </div>
+                        <div class="stat">
+                            <strong>2</strong> domains
+                        </div>
+                        <div class="stat">
+                            <strong>9</strong> APIs
+                        </div>
+                        <div class="stat">
+                            <strong>5</strong> pages
+                        </div>
+                    </div>
+                    <div class="sample-actions">
+                        <a href="https://github.com/upendra-manike/kora/tree/main/samples/security-routing" 
+                           class="btn btn-outline" target="_blank">View Code</a>
+                        <a href="#security-demo" class="btn btn-primary">Try It</a>
+                    </div>
+                </div>
             </div>
 
             <div class="samples-cta">
@@ -724,6 +757,166 @@ api listUsers {
                     <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
                         <strong>Prisma</strong>
                         <p style="font-size: 0.875rem; margin-top: 0.5rem;">Type-safe ORM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="security-demo" class="code-demo">
+        <div class="container">
+            <h2>Security & Routing - Interactive Demo</h2>
+            <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">
+                Complete security implementation with authentication, authorization, and route protection
+            </p>
+            
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="showDemoTab('security-auth')">Authentication</button>
+                <button class="demo-tab" onclick="showDemoTab('security-authz')">Authorization</button>
+                <button class="demo-tab" onclick="showDemoTab('security-routes')">Routes</button>
+                <button class="demo-tab" onclick="showDemoTab('security-api')">API Security</button>
+            </div>
+
+            <div id="security-auth" class="demo-content active">
+                <h3>Authentication (Login)</h3>
+                <pre><code>api login {
+  input {
+    email: Email
+    password: String
+  }
+
+  output {
+    user: User
+    token: String
+  }
+
+  handler {
+    let user = UserRepo.findByEmail(email)
+    let isValid = PasswordHash.verify(password, user.passwordHash)
+    
+    if (!isValid) {
+      throw Error("Invalid credentials")
+    }
+
+    let token = JWT.generate({
+      userId: user.id,
+      role: user.role
+    }, expiresIn)
+
+    return { user, token }
+  }
+}</code></pre>
+                <p class="demo-note">✅ Secure password verification, JWT token generation, session management.</p>
+            </div>
+
+            <div id="security-authz" class="demo-content">
+                <h3>Authorization (Role-Based)</h3>
+                <pre><code>api adminAction {
+  @requireAuth
+  @requireRole(ADMIN)
+
+  input { action: String }
+  output { success: Boolean }
+
+  handler {
+    let authContext = Request.getAuthContext()
+    
+    if (authContext.role != UserRole.ADMIN) {
+      throw Error("Admin access required")
+    }
+
+    // Admin-only logic
+    return { success: true }
+  }
+}</code></pre>
+                <p class="demo-note">✅ Role-based access control. Decorators enforce authorization automatically.</p>
+            </div>
+
+            <div id="security-routes" class="demo-content">
+                <h3>Route Protection</h3>
+                <pre><code>// Public route
+page Login {
+  @public
+  view() { /* Login form */ }
+}
+
+// Protected route
+page Dashboard {
+  @requireAuth
+  load() -> User
+  view(user: User) { /* Dashboard */ }
+}
+
+// Role-based route
+page AdminPanel {
+  @requireAuth
+  @requireRole(ADMIN)
+  load() -> AdminData
+  view(data: AdminData) { /* Admin panel */ }
+}</code></pre>
+                <p class="demo-note">✅ Routes automatically protected. Unauthorized users redirected to login.</p>
+            </div>
+
+            <div id="security-api" class="demo-content">
+                <h3>API Security</h3>
+                <pre><code>// Public API
+api getPublicData {
+  @public
+  output Post[]
+  handler {
+    return PostRepo.findPublic()
+  }
+}
+
+// Protected API
+api getProfile {
+  @requireAuth
+  output User
+  handler {
+    let authContext = Request.getAuthContext()
+    return UserRepo.findById(authContext.userId)
+  }
+}
+
+// Permission-based API
+api deletePost {
+  @requireAuth
+  @requirePermission(DELETE_POSTS)
+  input { id: UUID }
+  output Boolean
+  handler {
+    PostRepo.delete(id)
+    return true
+  }
+}</code></pre>
+                <p class="demo-note">✅ APIs protected with decorators. Middleware handles token verification automatically.</p>
+            </div>
+
+            <div class="demo-actions">
+                <a href="https://github.com/upendra-manike/kora/tree/main/samples/security-routing" 
+                   class="btn btn-primary" target="_blank">View Full Security Examples</a>
+                <a href="https://github.com/upendra-manike/kora/blob/main/samples/security-routing/SECURITY_BEST_PRACTICES.md" 
+                   class="btn btn-outline" target="_blank">Security Best Practices</a>
+            </div>
+
+            <div class="security-features" style="margin-top: 3rem; padding: 2rem; background: white; border-radius: 0.5rem;">
+                <h3 style="text-align: center; margin-bottom: 1.5rem;">Security Features</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>🔐 Authentication</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Login, logout, registration</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>🛡️ Authorization</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">RBAC & permissions</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>🔑 JWT Tokens</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Secure token management</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem;">
+                        <strong>🛣️ Route Guards</strong>
+                        <p style="font-size: 0.875rem; margin-top: 0.5rem;">Automatic protection</p>
                     </div>
                 </div>
             </div>
