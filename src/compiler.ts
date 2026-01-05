@@ -466,7 +466,15 @@ export class Compiler {
         // Could be JSX expression
         const expr = this.compileExpression(stmt.expression);
         output.push(indentStr + `{${expr}}`);
+      } else if (stmt.kind === 'if') {
+        // Handle nested if statements in JSX
+        output.push(this.compileIfStatementInJsx(stmt, indent, moduleName));
+      } else if (stmt.kind === 'for') {
+        // Handle nested for statements in JSX
+        output.push(this.compileForStatementInJsx(stmt, indent, moduleName));
       }
+      // Other statement types are silently skipped (variable declarations, assignments, etc.)
+      // as they're not valid in JSX context
     }
 
     return output.join('\n') || indentStr + '<div></div>';
@@ -538,12 +546,14 @@ export class Compiler {
     if (child.kind === 'jsx-expression') {
       // Handle statements (if/for) in JSX expressions
       if (child.expression.kind === 'if') {
-        return ' '.repeat(indent) + this.compileIfStatementInJsx(child.expression, indent);
+        // compileIfStatementInJsx already handles indentation internally
+        return this.compileIfStatementInJsx(child.expression, indent, moduleName);
       }
       if (child.expression.kind === 'for') {
-        return ' '.repeat(indent) + this.compileForStatementInJsx(child.expression, indent);
+        // compileForStatementInJsx already handles indentation internally
+        return this.compileForStatementInJsx(child.expression, indent, moduleName);
       }
-      return ' '.repeat(indent) + `{${this.compileExpression(child.expression)}}`;
+      return ' '.repeat(indent) + `{${this.compileExpression(child.expression as Expression)}}`;
     }
     return '';
   }

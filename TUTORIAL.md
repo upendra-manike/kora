@@ -8,13 +8,14 @@ A comprehensive guide to building full-stack applications with Kora.
 
 1. [Getting Started](#getting-started)
 2. [Core Concepts](#core-concepts)
-3. [Domain Modules](#domain-modules)
-4. [API Modules](#api-modules)
-5. [Page Modules](#page-modules)
-6. [CSS Styling](#css-styling)
-7. [Building Your First App](#building-your-first-app)
-8. [Advanced Patterns](#advanced-patterns)
-9. [Best Practices](#best-practices)
+3. [How Kora Runs](#how-kora-runs)
+4. [Domain Modules](#domain-modules)
+5. [API Modules](#api-modules)
+6. [Page Modules](#page-modules)
+7. [CSS Styling](#css-styling)
+8. [Building Your First App](#building-your-first-app)
+9. [Advanced Patterns](#advanced-patterns)
+10. [Best Practices](#best-practices)
 
 ---
 
@@ -74,6 +75,186 @@ Kora enforces architectural boundaries:
 - ❌ **API** cannot import from Page
 
 This ensures clean architecture by default!
+
+---
+
+## How Kora Runs
+
+Understanding how Kora code executes is crucial. **Kora compiles to standard TypeScript/JavaScript**, which means it runs on existing runtimes—no custom runtime needed!
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────┐
+│         Kora Source Code                 │
+│  Domain | API | Page Modules            │
+└──────────────┬──────────────────────────┘
+               │
+          Kora Compiler
+               │
+    ┌──────────┴──────────┐
+    │                     │
+    ▼                     ▼
+TypeScript          TypeScript
+Interfaces          React Components
+                    API Handlers
+    │                     │
+    └──────────┬──────────┘
+               │
+    ┌──────────┴──────────┐
+    │                     │
+    ▼                     ▼
+┌─────────┐          ┌─────────┐
+│ Browser │          │ Node.js │
+│ (React) │          │ Server  │
+└─────────┘          └─────────┘
+```
+
+### UI Runtime (Browser)
+
+**Kora Page Modules** compile to **React components** that run in the browser:
+
+```kora
+page ProductPage {
+  view(product: Product) {
+    <div>
+      <h1>{product.name}</h1>
+    </div>
+  }
+}
+```
+
+**Compiles to:**
+```typescript
+import React from 'react';
+
+export function ProductPage({ product }: { product: Product }) {
+  return (
+    <div>
+      <h1>{product.name}</h1>
+    </div>
+  );
+}
+```
+
+**How it runs:**
+1. Kora compiles `.kora` → `.ts` files
+2. Vite/Webpack bundles TypeScript → JavaScript
+3. Browser loads React component
+4. Component renders in DOM
+
+**Setup:**
+```bash
+# Build Kora files
+kora build --src src --out dist
+
+# Run dev server (Vite)
+npm run dev  # Opens http://localhost:3000
+```
+
+### Server Runtime (Node.js)
+
+**Kora API Modules** compile to **handler functions** that run on Node.js:
+
+```kora
+api getProduct {
+  input { id: UUID }
+  output Product
+  
+  handler {
+    // Your business logic
+  }
+}
+```
+
+**Compiles to:**
+```typescript
+export async function getProductHandler(
+  input: { id: string }
+): Promise<Product | undefined> {
+  // Your business logic
+}
+```
+
+**How it runs:**
+1. Kora compiles `.kora` → `.ts` files
+2. TypeScript compiles → JavaScript
+3. Node.js server imports handler
+4. Express/Fastify routes call handler
+
+**Setup:**
+```javascript
+// server.js
+const express = require('express');
+const { getProductHandler } = require('./dist/get-product');
+
+const app = express();
+app.use(express.json());
+
+app.get('/api/products/:id', async (req, res) => {
+  const result = await getProductHandler({ id: req.params.id });
+  res.json(result);
+});
+
+app.listen(3001);
+```
+
+### Full-Stack Flow
+
+Here's how a complete request flows:
+
+```
+1. User visits page
+   ↓
+2. React component loads
+   ↓
+3. Component calls loadProductPage(id)
+   ↓
+4. HTTP GET /api/products/:id
+   ↓
+5. Node.js server receives request
+   ↓
+6. Server calls getProductHandler({ id })
+   ↓
+7. Handler queries database
+   ↓
+8. Returns Product data
+   ↓
+9. React component renders UI
+```
+
+### Development Workflow
+
+**Three terminals:**
+
+```bash
+# Terminal 1: Watch and compile Kora
+kora dev --src src --out dist
+
+# Terminal 2: Frontend dev server
+npm run dev  # Vite on :3000
+
+# Terminal 3: Backend server
+npm run server  # Node.js on :3001
+```
+
+### Production Deployment
+
+**Frontend:**
+- Build: `kora build && vite build`
+- Deploy `dist/` to Vercel, Netlify, or any static host
+
+**Backend:**
+- Build: `kora build && tsc`
+- Deploy to Railway, Render, Heroku, or any Node.js host
+
+### Key Points
+
+✅ **No custom runtime** - Uses standard React and Node.js  
+✅ **Standard output** - TypeScript/JavaScript you can debug  
+✅ **Framework agnostic** - Works with any React/Node.js setup  
+✅ **Type-safe** - Shared types between UI and server  
+✅ **Zero lock-in** - Eject to pure TypeScript anytime  
 
 ---
 
