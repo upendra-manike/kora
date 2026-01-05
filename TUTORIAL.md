@@ -24,16 +24,51 @@ A comprehensive guide to building full-stack applications with Kora.
 ### Installation
 
 ```bash
-# Install globally
+# Install globally (recommended)
 npm install -g @kora-lang/kora
 
-# Or use with npx
-npx @kora-lang/kora new my-app
+# Verify installation
+kora --version
 ```
+
+If you encounter issues with global installation, see [FIX_GLOBAL_INSTALL.md](./FIX_GLOBAL_INSTALL.md) for troubleshooting.
+
+### Create Your First Project
+
+The easiest way to get started is to create a new Kora project:
+
+```bash
+kora new my-app
+cd my-app
+```
+
+This creates a complete project structure with:
+- `src/` - Kora source files (domain, API, page modules)
+- `dist/` - Compiled TypeScript output
+- `package.json` - Project configuration
+- `README.md` - Project documentation
+
+### Build Your Project
+
+```bash
+# Build all Kora files to TypeScript
+kora build
+```
+
+This compiles all `.kora` files in `src/` to TypeScript in `dist/`.
+
+### Start Development Server
+
+```bash
+# Watch for changes and rebuild automatically
+kora dev
+```
+
+The dev server watches your `.kora` files and rebuilds them when you make changes.
 
 ### Your First Kora File
 
-Create a file `hello.kora`:
+The `kora new` command creates example files. Here's what a page module looks like:
 
 ```kora
 page HelloWorld {
@@ -46,13 +81,7 @@ page HelloWorld {
 }
 ```
 
-Compile it:
-
-```bash
-kora compile hello.kora -o hello.ts
-```
-
-This generates a React component you can use in your Next.js or React app!
+After running `kora build`, this generates a React component in `dist/hello-world.ts` that you can use in your React or Next.js app!
 
 ---
 
