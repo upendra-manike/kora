@@ -544,9 +544,28 @@ module domain Config {
 
 ## API Modules
 
-API modules define your backend endpoints.
+API modules define your backend endpoints and handlers.
+
+### File Structure
+
+API modules are typically placed in `src/api/` directory:
+
+```
+my-app/
+└── src/
+    └── api/
+        ├── user/
+        │   ├── get-user.kora      # Get user by ID
+        │   ├── create-user.kora   # Create new user
+        │   └── update-user.kora   # Update user
+        └── product/
+            ├── get-product.kora
+            └── list-products.kora
+```
 
 ### Basic API
+
+**File: `src/api/user/get-user.kora`**
 
 ```kora
 api getUser {
@@ -561,6 +580,51 @@ api getUser {
     return UserRepo.findById(id)
   }
 }
+```
+
+**After compilation (`kora build`), this creates:**
+
+**File: `dist/api/user/get-user.ts`**
+```typescript
+import { User } from '../../domain/user'; // Domain type
+
+export interface getUserInput {
+  id: string;
+}
+
+export type getUserOutput = User;
+
+export async function getUserHandler(
+  input: getUserInput
+): Promise<getUserOutput | undefined> {
+  // Your business logic here
+  return UserRepo.findById(input.id);
+}
+```
+
+**Usage in your server (`server.js`):**
+
+```javascript
+import express from 'express';
+import { getUserHandler } from './dist/api/user/get-user.js';
+
+const app = express();
+app.use(express.json());
+
+app.get('/api/users/:id', async (req, res) => {
+  try {
+    const result = await getUserHandler({ id: req.params.id });
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(3001);
 ```
 
 ### API with Validation
@@ -825,26 +889,173 @@ page ResponsivePage {
 
 ## Building Your First App
 
-Let's build a simple Todo app!
+Let's build a simple Todo app step by step with complete file structure!
+
+### Project Structure
+
+```
+todo-app/
+├── src/
+│   ├── domain/
+│   │   └── todo.kora           # Todo data model
+│   ├── api/
+│   │   ├── get-todos.kora      # Get all todos
+│   │   ├── create-todo.kora    # Create new todo
+│   │   └── update-todo.kora    # Update todo
+│   └── ui/
+│       └── todo-list.kora      # Todo list page
+├── dist/                        # Compiled TypeScript (generated)
+├── server.js                    # Node.js backend server
+├── src/main.tsx                 # React app entry point
+├── index.html                   # HTML entry point
+├── vite.config.ts               # Vite configuration
+└── package.json                 # Project dependencies
+```
 
 ### Step 1: Define Domain
 
-Create `domain/todo.kora`:
+**File: `src/domain/todo.kora`**
 
 ```kora
 module domain Todo {
   type Todo {
     id: UUID
     title: String
+    description: String?
     completed: Boolean
     createdAt: Date
+    updatedAt: Date
   }
+}
+```
+
+**After `kora build`, this creates:**
+
+**File: `dist/domain/todo.ts`**
+```typescript
+export interface Todo {
+  id: string;
+  title: string;
+  description: string | null | undefined;
+  completed: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 ```
 
 ### Step 2: Create APIs
 
-Create `api/todos.kora`:
+**File: `src/api/get-todos.kora`**
+
+```kora
+api getTodos {
+  input {}
+  output Todo[]
+
+  handler {
+    // TODO: Fetch from database
+    return [];
+  }
+}
+```
+
+**File: `src/api/create-todo.kora`**
+
+```kora
+api createTodo {
+  input {
+    title: String
+    description: String?
+  }
+  output Todo
+
+  handler {
+    // TODO: Save to database
+    const newTodo = {
+      id: generateUUID(),
+      title: input.title,
+      description: input.description,
+      completed: false,
+      createdAt: now(),
+      updatedAt: now()
+    };
+    return newTodo;
+  }
+}
+```
+
+**File: `src/api/update-todo.kora`**
+
+```kora
+api updateTodo {
+  input {
+    id: UUID
+    title: String?
+    completed: Boolean?
+  }
+  output Todo
+
+  handler {
+    // TODO: Update in database
+    return updatedTodo;
+  }
+}
+```
+
+**After `kora build`, these create:**
+
+**File: `dist/api/get-todos.ts`**
+```typescript
+import { Todo } from '../domain/todo';
+
+export interface getTodosInput {}
+
+export type getTodosOutput = Todo[];
+
+export async function getTodosHandler(
+  input: getTodosInput
+): Promise<getTodosOutput | undefined> {
+  // TODO: Fetch from database
+  return [];
+}
+```
+
+**File: `dist/api/create-todo.ts`**
+```typescript
+import { Todo } from '../domain/todo';
+
+export interface createTodoInput {
+  title: string;
+  description?: string | null;
+}
+
+export type createTodoOutput = Todo;
+
+export async function createTodoHandler(
+  input: createTodoInput
+): Promise<createTodoOutput | undefined> {
+  // Implementation...
+}
+```
+
+**File: `dist/api/update-todo.ts`**
+```typescript
+import { Todo } from '../domain/todo';
+
+export interface updateTodoInput {
+  id: string;
+  title?: string | null;
+  completed?: boolean | null;
+}
+
+export type updateTodoOutput = Todo;
+
+export async function updateTodoHandler(
+  input: updateTodoInput
+): Promise<updateTodoOutput | undefined> {
+  // Implementation...
+}
+```
 
 ```kora
 api getTodos {
