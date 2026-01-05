@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Kora CLI
+ * Stratum CLI
  * 
- * Command-line interface for the Kora compiler.
+ * Command-line interface for the Stratum compiler.
  */
 
 import { Command } from 'commander';
@@ -17,15 +17,15 @@ import { startDevServer } from './dev.js';
 const program = new Command();
 
 program
-  .name('kora')
-  .description('Kora - A full-stack programming language')
+  .name('stratum')
+  .description('Stratum - A full-stack programming language')
   .version('0.1.0');
 
 program
   .command('new <name>')
-  .description('Create a new Kora project')
+  .description('Create a new Stratum project')
   .action((name: string) => {
-    console.log(`Creating new Kora project: ${name}`);
+    console.log(`Creating new Stratum project: ${name}`);
     
     const projectPath = join(process.cwd(), name);
     
@@ -70,19 +70,19 @@ program
 }
 `;
 
-    writeFileSync(join(projectPath, 'src', 'user.kora'), exampleDomain);
-    writeFileSync(join(projectPath, 'src', 'get-user.kora'), exampleApi);
-    writeFileSync(join(projectPath, 'src', 'user-profile.kora'), examplePage);
+    writeFileSync(join(projectPath, 'src', 'user.stratum'), exampleDomain);
+    writeFileSync(join(projectPath, 'src', 'get-user.stratum'), exampleApi);
+    writeFileSync(join(projectPath, 'src', 'user-profile.stratum'), examplePage);
 
     // Create package.json
     const packageJson = {
       name: name.toLowerCase().replace(/\s+/g, '-'),
       version: '0.1.0',
-      description: 'A Kora project',
+      description: 'A Stratum project',
       type: 'module',
       scripts: {
-        build: 'kora build',
-        dev: 'kora dev',
+        build: 'stratum build',
+        dev: 'stratum dev',
       },
       private: true,
     };
@@ -91,36 +91,36 @@ program
     // Create README.md
     const readme = `# ${name}
 
-A Kora full-stack application.
+A Stratum full-stack application.
 
 ## Getting Started
 
 1. **Build the project:**
    \`\`\`bash
-   kora build
+   stratum build
    \`\`\`
 
 2. **Start development server:**
    \`\`\`bash
-   kora dev
+   stratum dev
    \`\`\`
 
 ## Project Structure
 
-- \`src/\` - Kora source files
-  - \`user.kora\` - Domain module (data types)
-  - \`get-user.kora\` - API module (backend handler)
-  - \`user-profile.kora\` - Page module (UI component)
+- \`src/\` - Stratum source files
+  - \`user.stratum\` - Domain module (data types)
+  - \`get-user.stratum\` - API module (backend handler)
+  - \`user-profile.stratum\` - Page module (UI component)
 - \`dist/\` - Compiled TypeScript output
 
 ## Next Steps
 
-1. Implement the API handler in \`src/get-user.kora\`
-2. Implement the load function in \`src/user-profile.kora\`
+1. Implement the API handler in \`src/get-user.stratum\`
+2. Implement the load function in \`src/user-profile.stratum\`
 3. Set up a React app to use the compiled components
 4. Set up a Node.js server to use the compiled API handlers
 
-See the [Kora Tutorial](https://github.com/kora-lang/kora/blob/main/TUTORIAL.md) for more details.
+See the [Stratum Tutorial](https://github.com/stratum-lang/stratum/blob/main/TUTORIAL.md) for more details.
 `;
     writeFileSync(join(projectPath, 'README.md'), readme);
 
@@ -136,17 +136,17 @@ dist/
 
     console.log(`✅ Created project: ${name}`);
     console.log(`   cd ${name}`);
-    console.log(`   kora build  # Compile Kora files`);
-    console.log(`   kora dev    # Start development server`);
+    console.log(`   stratum build  # Compile Stratum files`);
+    console.log(`   stratum dev    # Start development server`);
   });
 
 program
   .command('build')
-  .description('Build Kora project to TypeScript/JavaScript')
+  .description('Build Stratum project to TypeScript/JavaScript')
   .option('-o, --out <dir>', 'Output directory', 'dist')
   .option('-s, --src <dir>', 'Source directory', 'src')
   .action(async (options: { out?: string; src?: string }) => {
-    console.log('Building Kora project...');
+    console.log('Building Stratum project...');
     
     try {
       const result = await buildProject({
@@ -189,8 +189,8 @@ program
 
 program
   .command('check')
-  .description('Check Kora code for errors')
-  .argument('<file>', 'Kora file to check')
+  .description('Check Stratum code for errors')
+  .argument('<file>', 'Stratum file to check')
   .action((file: string) => {
     try {
       const source = readFileSync(file, 'utf-8');
@@ -205,8 +205,8 @@ program
 
 program
   .command('compile')
-  .description('Compile a Kora file to TypeScript')
-  .argument('<file>', 'Kora file to compile')
+  .description('Compile a Stratum file to TypeScript')
+  .argument('<file>', 'Stratum file to compile')
   .option('-o, --out <file>', 'Output file')
   .action((file: string, options: { out?: string }) => {
     try {

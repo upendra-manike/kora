@@ -1,7 +1,7 @@
 /**
- * Kora Compiler
+ * Stratum Compiler
  * 
- * Compiles Kora AST to TypeScript/JavaScript.
+ * Compiles Stratum AST to TypeScript/JavaScript.
  */
 
 import type {
@@ -50,11 +50,11 @@ export interface CompilerOutput {
 }
 
 /**
- * Compiler for Kora language
+ * Compiler for Stratum language
  */
 export class Compiler {
   /**
-   * Compile Kora program to TypeScript and CSS
+   * Compile Stratum program to TypeScript and CSS
    */
   compile(program: Program): CompilerOutput {
     const output: string[] = [];
@@ -83,7 +83,7 @@ export class Compiler {
   }
 
   /**
-   * Compile Kora program to TypeScript (legacy method for backward compatibility)
+   * Compile Stratum program to TypeScript (legacy method for backward compatibility)
    */
   compileLegacy(program: Program): string {
     const result = this.compile(program);
@@ -625,7 +625,7 @@ export class Compiler {
   }
 
   /**
-   * Compile Kora type to TypeScript type
+   * Compile Stratum type to TypeScript type
    */
   private compileType(type: any): string {
     if (!type) return 'any';

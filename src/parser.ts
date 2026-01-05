@@ -1,7 +1,7 @@
 /**
- * Kora Language Parser
+ * Stratum Language Parser
  * 
- * Parses Kora source code into an Abstract Syntax Tree (AST).
+ * Parses Stratum source code into an Abstract Syntax Tree (AST).
  */
 
 import { Tokenizer, Token, TokenType } from './tokenizer.js';
@@ -45,14 +45,14 @@ import type {
 } from './types.js';
 
 /**
- * Parser for Kora language
+ * Parser for Stratum language
  */
 export class Parser {
   private tokens: Token[] = [];
   private current = 0;
 
   /**
-   * Parse Kora source code into AST
+   * Parse Stratum source code into AST
    */
   parse(source: string): Program {
     const tokenizer = new Tokenizer(source);

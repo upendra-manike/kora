@@ -1,7 +1,7 @@
 /**
- * Kora Language Tokenizer (Lexer)
+ * Stratum Language Tokenizer (Lexer)
  * 
- * Converts Kora source code into tokens.
+ * Converts Stratum source code into tokens.
  */
 
 export interface Token {

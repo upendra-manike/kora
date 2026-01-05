@@ -1,5 +1,5 @@
 /**
- * Build System for Kora
+ * Build System for Stratum
  * 
  * Handles multi-file compilation, dependency resolution, and output generation.
  */
@@ -23,9 +23,9 @@ export interface BuildResult {
 }
 
 /**
- * Find all .kora files in a directory recursively
+ * Find all .stratum files in a directory recursively
  */
-function findKoraFiles(dir: string): string[] {
+function findStratumFiles(dir: string): string[] {
   const files: string[] = [];
   
   if (!existsSync(dir)) {
@@ -39,8 +39,8 @@ function findKoraFiles(dir: string): string[] {
     const stat = statSync(fullPath);
     
     if (stat.isDirectory()) {
-      files.push(...findKoraFiles(fullPath));
-    } else if (extname(entry) === '.kora') {
+      files.push(...findStratumFiles(fullPath));
+    } else if (extname(entry) === '.stratum') {
       files.push(fullPath);
     }
   }
@@ -49,7 +49,7 @@ function findKoraFiles(dir: string): string[] {
 }
 
 /**
- * Build a single Kora file
+ * Build a single Stratum file
  */
 function buildFile(filePath: string, srcDir: string, outDir: string): { success: boolean; error?: string } {
   try {
@@ -62,7 +62,7 @@ function buildFile(filePath: string, srcDir: string, outDir: string): { success:
     
     // Determine output path relative to srcDir
     const relativePath = relative(srcDir, filePath);
-    const baseName = relativePath.replace(/\.kora$/, '');
+    const baseName = relativePath.replace(/\.stratum$/, '');
     const tsOutputPath = join(outDir, baseName + '.ts');
     const tsOutputDir = dirname(tsOutputPath);
     
@@ -87,7 +87,7 @@ function buildFile(filePath: string, srcDir: string, outDir: string): { success:
 }
 
 /**
- * Build entire Kora project
+ * Build entire Stratum project
  */
 export async function buildProject(options: BuildOptions = {}): Promise<BuildResult> {
   const srcDir = options.srcDir || 'src';
@@ -96,11 +96,11 @@ export async function buildProject(options: BuildOptions = {}): Promise<BuildRes
   const errors: string[] = [];
   const warnings: string[] = [];
   
-  // Find all .kora files
-  const koraFiles = findKoraFiles(srcDir);
+  // Find all .stratum files
+  const stratumFiles = findStratumFiles(srcDir);
   
-  if (koraFiles.length === 0) {
-    warnings.push(`No .kora files found in ${srcDir}`);
+  if (stratumFiles.length === 0) {
+    warnings.push(`No .stratum files found in ${srcDir}`);
     return {
       success: true,
       files: 0,
@@ -116,7 +116,7 @@ export async function buildProject(options: BuildOptions = {}): Promise<BuildRes
   
   // Build each file
   let successCount = 0;
-  for (const file of koraFiles) {
+  for (const file of stratumFiles) {
     const result = buildFile(file, srcDir, outDir);
     if (result.success) {
       successCount++;

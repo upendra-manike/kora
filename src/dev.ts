@@ -1,5 +1,5 @@
 /**
- * Development Server for Kora
+ * Development Server for Stratum
  * 
  * Watches for file changes and recompiles automatically.
  */
@@ -19,7 +19,7 @@ export async function startDevServer(options: DevOptions = {}): Promise<void> {
   const srcDir = options.srcDir || 'src';
   const outDir = options.outDir || 'dist';
   
-  console.log(chalk.blue('🚀 Starting Kora dev server...'));
+  console.log(chalk.blue('🚀 Starting Stratum dev server...'));
   console.log(chalk.gray(`   Watching: ${srcDir}/`));
   console.log(chalk.gray(`   Output: ${outDir}/`));
   console.log('');
@@ -43,7 +43,7 @@ export async function startDevServer(options: DevOptions = {}): Promise<void> {
   console.log('');
   
   // Watch for changes
-  const watcher = watch(`${srcDir}/**/*.kora`, {
+  const watcher = watch(`${srcDir}/**/*.stratum`, {
     ignored: /node_modules/,
     persistent: true,
   });

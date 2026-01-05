@@ -1,11 +1,11 @@
 {
-  "name": "@kora-lang/kora",
+  "name": "@stratum-lang/stratum",
   "version": "0.1.2",
-  "description": "Kora - A full-stack programming language that compiles to TypeScript/JavaScript",
+  "description": "Stratum - A full-stack programming language that compiles to TypeScript/JavaScript",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "kora": "./dist/cli.js"
+    "stratum": "./dist/cli.js"
   },
   "files": [
     "dist",
@@ -23,7 +23,7 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "kora",
+    "stratum",
     "programming-language",
     "compiler",
     "typescript",
@@ -37,12 +37,12 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kora-lang/kora.git"
+    "url": "https://github.com/stratum-lang/stratum.git"
   },
   "bugs": {
-    "url": "https://github.com/kora-lang/kora/issues"
+    "url": "https://github.com/stratum-lang/stratum/issues"
   },
-  "homepage": "https://github.com/kora-lang/kora#readme",
+  "homepage": "https://github.com/stratum-lang/stratum#readme",
   "engines": {
     "node": ">=18.0.0"
   },
