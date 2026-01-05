@@ -890,10 +890,87 @@ src/
 
 ## Next Steps
 
-- Check out the [Sample Projects](../samples/) for real-world examples
-- Read the [Getting Started Guide](./GETTING_STARTED.md)
-- Explore [Advanced Features](./ROADMAP.md)
-- Join the community on [GitHub](https://github.com/upendra-manike/kora)
+1. **Create a project** - Use `kora new my-app` to get started
+2. **Read the guides**:
+   - [CREATE_APP_GUIDE.md](./CREATE_APP_GUIDE.md) - Complete app creation guide
+   - [RUNTIME_ARCHITECTURE.md](./RUNTIME_ARCHITECTURE.md) - How UI and server run
+   - [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy your Kora apps
+3. **Explore examples** - Check the `samples/` directory for real-world patterns
+4. **Build something** - Start with a simple todo app, then expand
+5. **Join the community** - Get help and share your projects on GitHub
+
+## Quick Reference
+
+### Commands
+
+```bash
+# Create new project
+kora new <name>
+
+# Build project
+kora build
+
+# Start dev server (watch mode)
+kora dev
+
+# Compile single file
+kora compile <file> -o <output>
+
+# Check syntax
+kora check <file>
+```
+
+### Project Structure
+
+```
+my-app/
+├── src/              # Kora source files (.kora)
+│   ├── domain/       # Domain modules (data types)
+│   ├── api/          # API modules (backend handlers)
+│   └── ui/           # Page modules (UI components)
+├── dist/             # Compiled TypeScript output
+├── package.json      # Project configuration
+└── README.md         # Project documentation
+```
+
+### Common Patterns
+
+**Domain Module:**
+```kora
+module domain User {
+  type User {
+    id: UUID
+    name: String
+    email: Email
+  }
+}
+```
+
+**API Module:**
+```kora
+api getUser {
+  input { id: UUID }
+  output User
+  
+  handler {
+    // Your business logic
+  }
+}
+```
+
+**Page Module:**
+```kora
+page UserProfile {
+  load(id: UUID) -> User
+  
+  view(user: User) {
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  }
+}
+```
 
 ---
 
