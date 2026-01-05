@@ -267,14 +267,176 @@ npm run dev  # Vite on :3000
 npm run server  # Node.js on :3001
 ```
 
+### Setting Up Server and Ports
+
+#### Frontend Server (Vite)
+
+**vite.config.ts:**
+```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3000,        // Frontend port
+    host: true,        // Allow external access
+    open: true,        // Auto-open browser
+  },
+  build: {
+    outDir: 'build',   // Output directory
+  },
+});
+```
+
+**Environment Variables:**
+```bash
+# .env
+VITE_API_URL=http://localhost:3001
+VITE_PORT=3000
+```
+
+#### Backend Server (Node.js/Express)
+
+**server.js:**
+```javascript
+import express from 'express';
+import { getUserHandler } from './dist/get-user.js';
+
+const app = express();
+const PORT = process.env.PORT || 3001; // Default port 3001
+
+app.use(express.json());
+app.use(express.static('public')); // Serve static files
+
+// CORS configuration
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
+// API routes
+app.get('/api/users/:id', async (req, res) => {
+  try {
+    const result = await getUserHandler({ id: req.params.id });
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
+```
+
+**package.json scripts:**
+```json
+{
+  "scripts": {
+    "server": "node server.js",
+    "server:dev": "nodemon server.js",
+    "server:prod": "NODE_ENV=production node server.js"
+  }
+}
+```
+
+**Environment Variables:**
+```bash
+# .env
+PORT=3001
+NODE_ENV=development
+DATABASE_URL=postgresql://...
+API_KEY=your-api-key
+```
+
+#### Port Configuration
+
+**Default Ports:**
+- Frontend (Vite): `3000`
+- Backend (Node.js): `3001`
+- Kora Dev Server: Watches files (no port needed)
+
+**Change Ports:**
+
+**Frontend:**
+```bash
+# Via command line
+npm run dev -- --port 4000
+
+# Or in vite.config.ts
+server: { port: 4000 }
+```
+
+**Backend:**
+```bash
+# Via environment variable
+PORT=4001 npm run server
+
+# Or in server.js
+const PORT = process.env.PORT || 4001;
+```
+
+#### Full-Stack Setup Example
+
+**Complete setup with custom ports:**
+
+```bash
+# 1. Create project
+kora new my-app
+cd my-app
+
+# 2. Install dependencies
+npm install express react react-dom
+npm install -D vite @vitejs/plugin-react
+
+# 3. Create server.js (backend)
+# (See example above)
+
+# 4. Create vite.config.ts (frontend)
+# (See example above)
+
+# 5. Create src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { UserProfile } from './dist/user-profile';
+
+function App() {
+  const user = { id: '1', name: 'John', email: 'john@example.com' };
+  return <UserProfile user={user} />;
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+**Run everything:**
+```bash
+# Terminal 1: Kora compiler (watches for changes)
+kora dev
+
+# Terminal 2: Frontend (port 3000)
+npm run dev
+
+# Terminal 3: Backend (port 3001)
+npm run server
+```
+
 ### Production Deployment
 
 **Frontend:**
 - Build: `kora build && vite build`
-- Deploy `dist/` to Vercel, Netlify, or any static host
+- Deploy `build/` to Vercel, Netlify, or any static host
+- Set environment variables in hosting platform
 
 **Backend:**
 - Build: `kora build && tsc`
+- Set `PORT` environment variable (hosting platform usually provides this)
 - Deploy to Railway, Render, Heroku, or any Node.js host
 
 ### Key Points
