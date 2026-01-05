@@ -62,8 +62,10 @@ program
   load(id: UUID) -> User
 
   view(user: User) {
-    <h1>{user.name}</h1>
-    <p>{user.email}</p>
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
   }
 }
 `;
@@ -72,9 +74,70 @@ program
     writeFileSync(join(projectPath, 'src', 'get-user.kora'), exampleApi);
     writeFileSync(join(projectPath, 'src', 'user-profile.kora'), examplePage);
 
+    // Create package.json
+    const packageJson = {
+      name: name.toLowerCase().replace(/\s+/g, '-'),
+      version: '0.1.0',
+      description: 'A Kora project',
+      type: 'module',
+      scripts: {
+        build: 'kora build',
+        dev: 'kora dev',
+      },
+      private: true,
+    };
+    writeFileSync(join(projectPath, 'package.json'), JSON.stringify(packageJson, null, 2));
+
+    // Create README.md
+    const readme = `# ${name}
+
+A Kora full-stack application.
+
+## Getting Started
+
+1. **Build the project:**
+   \`\`\`bash
+   kora build
+   \`\`\`
+
+2. **Start development server:**
+   \`\`\`bash
+   kora dev
+   \`\`\`
+
+## Project Structure
+
+- \`src/\` - Kora source files
+  - \`user.kora\` - Domain module (data types)
+  - \`get-user.kora\` - API module (backend handler)
+  - \`user-profile.kora\` - Page module (UI component)
+- \`dist/\` - Compiled TypeScript output
+
+## Next Steps
+
+1. Implement the API handler in \`src/get-user.kora\`
+2. Implement the load function in \`src/user-profile.kora\`
+3. Set up a React app to use the compiled components
+4. Set up a Node.js server to use the compiled API handlers
+
+See the [Kora Tutorial](https://github.com/kora-lang/kora/blob/main/TUTORIAL.md) for more details.
+`;
+    writeFileSync(join(projectPath, 'README.md'), readme);
+
+    // Create .gitignore
+    const gitignore = `node_modules/
+dist/
+*.log
+.DS_Store
+.env
+.env.local
+`;
+    writeFileSync(join(projectPath, '.gitignore'), gitignore);
+
     console.log(`✅ Created project: ${name}`);
     console.log(`   cd ${name}`);
-    console.log(`   kora dev`);
+    console.log(`   kora build  # Compile Kora files`);
+    console.log(`   kora dev    # Start development server`);
   });
 
 program
