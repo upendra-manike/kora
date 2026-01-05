@@ -1,0 +1,40 @@
+api createOrder {
+  input {
+    userId: UUID
+    shippingAddress: Address
+    paymentMethod: PaymentMethod
+  }
+
+  output Order
+
+  handler {
+    let cart = CartRepo.findByUser(userId)
+    if (cart == null || cart.items.length == 0) {
+      throw Error("Cart is empty")
+    }
+    
+    let order = {
+      id: UUID.generate(),
+      userId: userId,
+      items: cart.items.map(item => ({
+        productId: item.productId,
+        productName: ProductRepo.find(item.productId).name,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      total: cart.total,
+      status: OrderStatus.PENDING,
+      shippingAddress: shippingAddress,
+      paymentMethod: paymentMethod,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+    
+    OrderRepo.save(order)
+    CartRepo.clear(userId)
+    
+    return order
+  }
+}
+
+

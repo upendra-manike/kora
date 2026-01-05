@@ -1,6 +1,6 @@
-# Routing & Security Guide - Kora
+# Routing & Security Guide - Stratum
 
-Complete guide to implementing routing and security in Kora applications.
+Complete guide to implementing routing and security in Stratum applications.
 
 ## Route Protection
 
@@ -8,7 +8,7 @@ Complete guide to implementing routing and security in Kora applications.
 
 Routes that don't require authentication:
 
-```kora
+```stratum
 page Login {
   @public
   
@@ -22,7 +22,7 @@ page Login {
 
 Routes that require authentication:
 
-```kora
+```stratum
 page Dashboard {
   @requireAuth
   
@@ -37,7 +37,7 @@ page Dashboard {
 
 Routes that require specific roles:
 
-```kora
+```stratum
 page AdminPanel {
   @requireAuth
   @requireRole(ADMIN)
@@ -53,7 +53,7 @@ page AdminPanel {
 
 Routes that require specific permissions:
 
-```kora
+```stratum
 page EditPost {
   @requireAuth
   @requirePermission(WRITE_POSTS)
@@ -69,7 +69,7 @@ page EditPost {
 
 ### Public APIs
 
-```kora
+```stratum
 api getPublicData {
   @public
   
@@ -83,7 +83,7 @@ api getPublicData {
 
 ### Protected APIs
 
-```kora
+```stratum
 api getProfile {
   @requireAuth
   
@@ -98,7 +98,7 @@ api getProfile {
 
 ### Role-Based APIs
 
-```kora
+```stratum
 api adminAction {
   @requireAuth
   @requireRole(ADMIN)
@@ -113,7 +113,7 @@ api adminAction {
 
 ### Permission-Based APIs
 
-```kora
+```stratum
 api deletePost {
   @requireAuth
   @requirePermission(DELETE_POSTS)
@@ -131,7 +131,7 @@ api deletePost {
 
 ### 1. Login
 
-```kora
+```stratum
 api login {
   input {
     email: Email
@@ -152,7 +152,7 @@ api login {
 
 ### 2. Token Verification
 
-```kora
+```stratum
 api verifyToken {
   input { token: String }
   output AuthContext
@@ -166,7 +166,7 @@ api verifyToken {
 
 ### 3. Logout
 
-```kora
+```stratum
 api logout {
   input { token: String }
   output Boolean
@@ -193,7 +193,7 @@ The compiler generates middleware that:
 
 Checks user role before allowing access:
 
-```kora
+```stratum
 @requireRole(ADMIN, MODERATOR)
 ```
 
@@ -201,7 +201,7 @@ Checks user role before allowing access:
 
 Checks user permissions:
 
-```kora
+```stratum
 @requirePermission(WRITE_POSTS, DELETE_POSTS)
 ```
 
@@ -209,7 +209,7 @@ Checks user permissions:
 
 ### Email Validation
 
-```kora
+```stratum
 if (!EmailValidator.isValid(email)) {
   throw Error("Invalid email format")
 }
@@ -217,7 +217,7 @@ if (!EmailValidator.isValid(email)) {
 
 ### Password Validation
 
-```kora
+```stratum
 if (!PasswordValidator.isStrong(password)) {
   throw Error("Password must be at least 8 characters...")
 }
@@ -225,7 +225,7 @@ if (!PasswordValidator.isStrong(password)) {
 
 ### Input Sanitization
 
-```kora
+```stratum
 let sanitized = InputSanitizer.sanitize(userInput)
 ```
 
@@ -233,14 +233,14 @@ let sanitized = InputSanitizer.sanitize(userInput)
 
 ### 1. Password Hashing
 
-```kora
+```stratum
 let passwordHash = PasswordHash.hash(password)
 let isValid = PasswordHash.verify(password, hash)
 ```
 
 ### 2. JWT Tokens
 
-```kora
+```stratum
 let token = JWT.generate({
   userId: user.id,
   role: user.role
@@ -251,7 +251,7 @@ let payload = JWT.verify(token)
 
 ### 3. Session Management
 
-```kora
+```stratum
 let session = {
   id: UUID.generate(),
   userId: user.id,
@@ -263,7 +263,7 @@ SessionRepo.save(session)
 
 ### 4. Rate Limiting
 
-```kora
+```stratum
 @rateLimit(maxRequests: 100, windowMs: 60000)
 api login {
   // Login logic
@@ -272,7 +272,7 @@ api login {
 
 ### 5. CORS Configuration
 
-```kora
+```stratum
 @cors(origins: ["https://example.com"])
 api publicApi {
   // API logic
@@ -285,7 +285,7 @@ api publicApi {
 
 If user is not authenticated, redirect to login:
 
-```kora
+```stratum
 page Dashboard {
   @requireAuth
   @redirectUnauthenticated("/login")
@@ -300,7 +300,7 @@ page Dashboard {
 
 If user lacks permission, redirect:
 
-```kora
+```stratum
 page AdminPanel {
   @requireRole(ADMIN)
   @redirectUnauthorized("/dashboard")
@@ -313,7 +313,7 @@ page AdminPanel {
 
 ## Generated Code
 
-Kora generates:
+Stratum generates:
 
 1. **Route Guards** - Check authentication/authorization
 2. **Middleware** - Extract and verify tokens
@@ -322,7 +322,7 @@ Kora generates:
 
 ## Example: Complete Flow
 
-```kora
+```stratum
 // 1. Public login page
 page Login {
   @public
@@ -355,5 +355,6 @@ page EditPost {
 
 ---
 
-**Kora handles routing and security automatically!**
+**Stratum handles routing and security automatically!**
+
 

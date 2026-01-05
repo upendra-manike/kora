@@ -1,15 +1,15 @@
-# Complete Database CRUD Guide with Kora
+# Complete Database CRUD Guide with Stratum
 
-A comprehensive guide to building full-stack applications with databases using Kora.
+A comprehensive guide to building full-stack applications with databases using Stratum.
 
 ## Overview
 
-Kora generates the API structure and types. You implement the repository layer for your chosen database.
+Stratum generates the API structure and types. You implement the repository layer for your chosen database.
 
 ## Architecture
 
 ```
-Kora Code (Domain/API/UI)
+Stratum Code (Domain/API/UI)
     ↓
 Compiler generates TypeScript
     ↓
@@ -20,7 +20,7 @@ Database (MongoDB/PostgreSQL/MySQL/etc.)
 
 ## Step 1: Define Domain
 
-```kora
+```stratum
 module domain User {
   type User {
     id: UUID
@@ -37,7 +37,7 @@ module domain User {
 
 ### Create
 
-```kora
+```stratum
 api createUser {
   input {
     name: String
@@ -60,7 +60,7 @@ api createUser {
 
 ### Read
 
-```kora
+```stratum
 api getUser {
   input { id: UUID }
   output User
@@ -83,7 +83,7 @@ api listUsers {
 
 ### Update
 
-```kora
+```stratum
 api updateUser {
   input {
     id: UUID
@@ -104,7 +104,7 @@ api updateUser {
 
 ### Delete
 
-```kora
+```stratum
 api deleteUser {
   input { id: UUID }
   output Boolean
@@ -175,7 +175,7 @@ export class UserRepo {
 
 ## Step 4: Build UI
 
-```kora
+```stratum
 page UserManagement {
   load() -> User[]
   
@@ -197,7 +197,7 @@ page UserManagement {
 ## Step 5: Compile and Use
 
 ```bash
-kora build
+stratum build
 ```
 
 Import in your app:
@@ -232,7 +232,7 @@ const user = await createUserHandler({
 
 ## Key Benefits
 
-✅ **Database Agnostic** - Same Kora code works with any database  
+✅ **Database Agnostic** - Same Stratum code works with any database  
 ✅ **Type Safe** - Types flow from domain to API to UI  
 ✅ **No Boilerplate** - Compiler generates API structure  
 ✅ **Flexible** - Implement repository for your database choice  
@@ -247,5 +247,6 @@ const user = await createUserHandler({
 
 ---
 
-**Kora handles the structure, you handle the data!**
+**Stratum handles the structure, you handle the data!**
+
 

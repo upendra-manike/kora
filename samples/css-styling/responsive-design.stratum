@@ -1,0 +1,76 @@
+// Example: Responsive design with media queries
+// This shows how responsive CSS will work in Kora (future feature)
+
+page ProductGrid {
+  styles {
+    .grid {
+      display: grid;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+    }
+    
+    /* Desktop: 4 columns */
+    @media (min-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    
+    /* Tablet: 3 columns */
+    @media (min-width: 768px) and (max-width: 1199px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    /* Mobile: 2 columns */
+    @media (min-width: 480px) and (max-width: 767px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+      }
+    }
+    
+    /* Small mobile: 1 column */
+    @media (max-width: 479px) {
+      .grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+      }
+    }
+    
+    .product-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    @media (max-width: 768px) {
+      .product-card {
+        padding: var(--spacing-sm);
+      }
+    }
+  }
+  
+  view(products: Product[]) {
+    <div className="grid">
+      {for product in products {
+        <div key={product.id} className="product-card">
+          <h3>{product.name}</h3>
+          <p>${product.price}</p>
+        </div>
+      }}
+    </div>
+  }
+}
+
+

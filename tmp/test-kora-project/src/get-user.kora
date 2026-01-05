@@ -1,0 +1,8 @@
+api getUser {
+  input { id: UUID }
+  output User
+
+  handler {
+    // TODO: Implement
+  }
+}

@@ -1,11 +1,11 @@
-# How to Create Projects with Kora
+# How to Create Projects with Stratum
 
-A complete guide to building real applications with the Kora language.
+A complete guide to building real applications with the Stratum language.
 
 ## Installation
 
 ```bash
-npm install -g @kora-lang/kora
+npm install -g @stratum-lang/stratum
 ```
 
 ## Creating a New Project
@@ -13,7 +13,7 @@ npm install -g @kora-lang/kora
 ### Step 1: Initialize Project
 
 ```bash
-kora new my-app
+stratum new my-app
 cd my-app
 ```
 
@@ -27,13 +27,13 @@ my-app/
 └── dist/            # Compiled output
 ```
 
-### Step 2: Write Kora Code
+### Step 2: Write Stratum Code
 
 #### Define Domain Types
 
-Create `src/domain/user.kora`:
+Create `src/domain/user.stratum`:
 
-```kora
+```stratum
 module domain User {
   type User {
     id: UUID
@@ -45,9 +45,9 @@ module domain User {
 
 #### Create API Endpoints
 
-Create `src/api/get-user.kora`:
+Create `src/api/get-user.stratum`:
 
-```kora
+```stratum
 api getUser {
   input { id: UUID }
   output User
@@ -59,9 +59,9 @@ api getUser {
 
 #### Build UI Pages
 
-Create `src/ui/user-profile.kora`:
+Create `src/ui/user-profile.stratum`:
 
-```kora
+```stratum
 page UserProfile {
   load(id: UUID) -> User
   view(user: User) {
@@ -77,10 +77,10 @@ page UserProfile {
 
 ```bash
 # Check for errors
-kora check src/domain/user.kora
+stratum check src/domain/user.stratum
 
 # Compile entire project
-kora build
+stratum build
 
 # Output goes to dist/
 ```
@@ -105,7 +105,7 @@ export default async function UserPage({ params }: { params: { id: string } }) {
 
 Always define your data models first:
 
-```kora
+```stratum
 module domain Product {
   type Product {
     id: UUID
@@ -119,7 +119,7 @@ module domain Product {
 
 Build endpoints that use your domain:
 
-```kora
+```stratum
 api getProduct {
   input { id: UUID }
   output Product
@@ -133,7 +133,7 @@ api getProduct {
 
 Create pages that connect to APIs:
 
-```kora
+```stratum
 page ProductPage {
   load(id: UUID) -> Product
   view(product: Product) {
@@ -146,7 +146,7 @@ page ProductPage {
 ### 4. Compile and Deploy
 
 ```bash
-kora build
+stratum build
 # Use dist/ files in your app
 ```
 
@@ -191,21 +191,21 @@ APIs should be thin - delegate to repositories.
 
 ### 3. UI Connects Automatically
 
-Don't write fetch calls - Kora handles it.
+Don't write fetch calls - Stratum handles it.
 
 ### 4. Use Types Everywhere
 
-Leverage Kora's type system for safety.
+Leverage Stratum's type system for safety.
 
 ### 5. Compile Often
 
-Run `kora check` frequently to catch errors early.
+Run `stratum check` frequently to catch errors early.
 
 ## Common Patterns
 
 ### CRUD Operations
 
-```kora
+```stratum
 // Create
 api createItem { input {...} output Item handler {...} }
 
@@ -221,7 +221,7 @@ api deleteItem { input { id: UUID } output Boolean handler {...} }
 
 ### Lists with Filters
 
-```kora
+```stratum
 api listItems {
   input {
     category: String?
@@ -237,7 +237,7 @@ api listItems {
 
 ### Nested Data
 
-```kora
+```stratum
 type Post {
   id: UUID
   author: User      # Reference
@@ -247,9 +247,9 @@ type Post {
 
 ## Development Workflow
 
-1. **Write Kora code** in `src/`
-2. **Check syntax**: `kora check`
-3. **Compile**: `kora build`
+1. **Write Stratum code** in `src/`
+2. **Check syntax**: `stratum check`
+3. **Compile**: `stratum build`
 4. **Import generated code** in your app
 5. **Test and iterate**
 
@@ -270,5 +270,6 @@ type Post {
 
 ---
 
-**Happy building with Kora!** 🚀
+**Happy building with Stratum!** 🚀
+
 

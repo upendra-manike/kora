@@ -1,6 +1,6 @@
-# 🟢 Kora Language Tutorial
+# 🟢 Stratum Language Tutorial
 
-A comprehensive guide to building full-stack applications with Kora.
+A comprehensive guide to building full-stack applications with Stratum.
 
 ---
 
@@ -8,7 +8,7 @@ A comprehensive guide to building full-stack applications with Kora.
 
 1. [Getting Started](#getting-started)
 2. [Core Concepts](#core-concepts)
-3. [How Kora Runs](#how-kora-runs)
+3. [How Stratum Runs](#how-stratum-runs)
 4. [Domain Modules](#domain-modules)
 5. [API Modules](#api-modules)
 6. [Page Modules](#page-modules)
@@ -25,25 +25,25 @@ A comprehensive guide to building full-stack applications with Kora.
 
 ```bash
 # Install globally (recommended)
-npm install -g @kora-lang/kora
+npm install -g @stratum-lang/stratum
 
 # Verify installation
-kora --version
+stratum --version
 ```
 
 If you encounter issues with global installation, see [FIX_GLOBAL_INSTALL.md](./FIX_GLOBAL_INSTALL.md) for troubleshooting.
 
 ### Create Your First Project
 
-The easiest way to get started is to create a new Kora project:
+The easiest way to get started is to create a new Stratum project:
 
 ```bash
-kora new my-app
+stratum new my-app
 cd my-app
 ```
 
 This creates a complete project structure with:
-- `src/` - Kora source files (domain, API, page modules)
+- `src/` - Stratum source files (domain, API, page modules)
 - `dist/` - Compiled TypeScript output
 - `package.json` - Project configuration
 - `README.md` - Project documentation
@@ -51,43 +51,43 @@ This creates a complete project structure with:
 ### Build Your Project
 
 ```bash
-# Build all Kora files to TypeScript
-kora build
+# Build all Stratum files to TypeScript
+stratum build
 ```
 
-This compiles all `.kora` files in `src/` to TypeScript in `dist/`.
+This compiles all `.stratum` files in `src/` to TypeScript in `dist/`.
 
 ### Start Development Server
 
 ```bash
 # Watch for changes and rebuild automatically
-kora dev
+stratum dev
 ```
 
-The dev server watches your `.kora` files and rebuilds them when you make changes.
+The dev server watches your `.stratum` files and rebuilds them when you make changes.
 
-### Your First Kora File
+### Your First Stratum File
 
-The `kora new` command creates example files. Here's what a page module looks like:
+The `stratum new` command creates example files. Here's what a page module looks like:
 
-```kora
+```stratum
 page HelloWorld {
   view() {
     <div>
-      <h1>Hello, Kora!</h1>
+      <h1>Hello, Stratum!</h1>
       <p>Welcome to full-stack development</p>
     </div>
   }
 }
 ```
 
-After running `kora build`, this generates a React component in `dist/hello-world.ts` that you can use in your React or Next.js app!
+After running `stratum build`, this generates a React component in `dist/hello-world.ts` that you can use in your React or Next.js app!
 
 ---
 
 ## Core Concepts
 
-Kora organizes code into three types of modules:
+Stratum organizes code into three types of modules:
 
 1. **Domain Modules** - Define your data models and business logic
 2. **API Modules** - Define your backend endpoints
@@ -95,7 +95,7 @@ Kora organizes code into three types of modules:
 
 ### Module Boundaries
 
-Kora enforces architectural boundaries:
+Stratum enforces architectural boundaries:
 
 - ✅ **Domain** can import from Domain
 - ✅ **API** can import from Domain
@@ -107,19 +107,19 @@ This ensures clean architecture by default!
 
 ---
 
-## How Kora Runs
+## How Stratum Runs
 
-Understanding how Kora code executes is crucial. **Kora compiles to standard TypeScript/JavaScript**, which means it runs on existing runtimes—no custom runtime needed!
+Understanding how Stratum code executes is crucial. **Stratum compiles to standard TypeScript/JavaScript**, which means it runs on existing runtimes—no custom runtime needed!
 
 ### Architecture Overview
 
 ```
 ┌─────────────────────────────────────────┐
-│         Kora Source Code                 │
+│         Stratum Source Code               │
 │  Domain | API | Page Modules            │
 └──────────────┬──────────────────────────┘
                │
-          Kora Compiler
+          Stratum Compiler
                │
     ┌──────────┴──────────┐
     │                     │
@@ -141,9 +141,9 @@ Interfaces          React Components
 
 ### UI Runtime (Browser)
 
-**Kora Page Modules** compile to **React components** that run in the browser:
+**Stratum Page Modules** compile to **React components** that run in the browser:
 
-```kora
+```stratum
 page ProductPage {
   view(product: Product) {
     <div>
@@ -167,15 +167,15 @@ export function ProductPage({ product }: { product: Product }) {
 ```
 
 **How it runs:**
-1. Kora compiles `.kora` → `.ts` files
+1. Stratum compiles `.stratum` → `.ts` files
 2. Vite/Webpack bundles TypeScript → JavaScript
 3. Browser loads React component
 4. Component renders in DOM
 
 **Setup:**
 ```bash
-# Build Kora files
-kora build --src src --out dist
+# Build Stratum files
+stratum build --src src --out dist
 
 # Run dev server (Vite)
 npm run dev  # Opens http://localhost:3000
@@ -183,9 +183,9 @@ npm run dev  # Opens http://localhost:3000
 
 ### Server Runtime (Node.js)
 
-**Kora API Modules** compile to **handler functions** that run on Node.js:
+**Stratum API Modules** compile to **handler functions** that run on Node.js:
 
-```kora
+```stratum
 api getProduct {
   input { id: UUID }
   output Product
@@ -206,7 +206,7 @@ export async function getProductHandler(
 ```
 
 **How it runs:**
-1. Kora compiles `.kora` → `.ts` files
+1. Stratum compiles `.stratum` → `.ts` files
 2. TypeScript compiles → JavaScript
 3. Node.js server imports handler
 4. Express/Fastify routes call handler
@@ -257,8 +257,8 @@ Here's how a complete request flows:
 **Three terminals:**
 
 ```bash
-# Terminal 1: Watch and compile Kora
-kora dev --src src --out dist
+# Terminal 1: Watch and compile Stratum
+stratum dev --src src --out dist
 
 # Terminal 2: Frontend dev server
 npm run dev  # Vite on :3000
@@ -357,7 +357,7 @@ API_KEY=your-api-key
 **Default Ports:**
 - Frontend (Vite): `3000`
 - Backend (Node.js): `3001`
-- Kora Dev Server: Watches files (no port needed)
+- Stratum Dev Server: Watches files (no port needed)
 
 **Change Ports:**
 
@@ -385,7 +385,7 @@ const PORT = process.env.PORT || 4001;
 
 ```bash
 # 1. Create project
-kora new my-app
+stratum new my-app
 cd my-app
 
 # 2. Install dependencies
@@ -417,8 +417,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 **Run everything:**
 ```bash
-# Terminal 1: Kora compiler (watches for changes)
-kora dev
+# Terminal 1: Stratum compiler (watches for changes)
+stratum dev
 
 # Terminal 2: Frontend (port 3000)
 npm run dev
@@ -430,12 +430,12 @@ npm run server
 ### Production Deployment
 
 **Frontend:**
-- Build: `kora build && vite build`
+- Build: `stratum build && vite build`
 - Deploy `build/` to Vercel, Netlify, or any static host
 - Set environment variables in hosting platform
 
 **Backend:**
-- Build: `kora build && tsc`
+- Build: `stratum build && tsc`
 - Set `PORT` environment variable (hosting platform usually provides this)
 - Deploy to Railway, Render, Heroku, or any Node.js host
 
@@ -461,16 +461,16 @@ Domain modules are typically placed in `src/domain/` directory:
 my-app/
 └── src/
     └── domain/
-        ├── user.kora          # User domain module
-        ├── product.kora       # Product domain module
-        └── order.kora         # Order domain module
+        ├── user.stratum          # User domain module
+        ├── product.stratum       # Product domain module
+        └── order.stratum         # Order domain module
 ```
 
 ### Basic Type Definition
 
-**File: `src/domain/user.kora`**
+**File: `src/domain/user.stratum`**
 
-```kora
+```stratum
 module domain User {
   type User {
     id: UUID
@@ -481,7 +481,7 @@ module domain User {
 }
 ```
 
-**After compilation (`kora build`), this creates:**
+**After compilation (`stratum build`), this creates:**
 
 **File: `dist/user.ts`**
 ```typescript
@@ -497,7 +497,7 @@ This TypeScript interface can now be imported in both your API handlers and Reac
 
 ### Complex Types
 
-```kora
+```stratum
 module domain Blog {
   type Post {
     id: UUID
@@ -522,7 +522,7 @@ module domain Blog {
 
 ### Type System
 
-Kora supports:
+Stratum supports:
 
 - **Primitives**: `String`, `Number`, `Boolean`, `Date`, `UUID`, `Email`
 - **Arrays**: `String[]`, `User[]`
@@ -532,7 +532,7 @@ Kora supports:
 
 ### Constants
 
-```kora
+```stratum
 module domain Config {
   const MAX_POST_LENGTH = 5000
   const DEFAULT_PAGE_SIZE = 20
@@ -555,19 +555,19 @@ my-app/
 └── src/
     └── api/
         ├── user/
-        │   ├── get-user.kora      # Get user by ID
-        │   ├── create-user.kora   # Create new user
-        │   └── update-user.kora   # Update user
+        │   ├── get-user.stratum      # Get user by ID
+        │   ├── create-user.stratum   # Create new user
+        │   └── update-user.stratum   # Update user
         └── product/
-            ├── get-product.kora
-            └── list-products.kora
+            ├── get-product.stratum
+            └── list-products.stratum
 ```
 
 ### Basic API
 
-**File: `src/api/user/get-user.kora`**
+**File: `src/api/user/get-user.stratum`**
 
-```kora
+```stratum
 api getUser {
   input {
     id: UUID
@@ -582,7 +582,7 @@ api getUser {
 }
 ```
 
-**After compilation (`kora build`), this creates:**
+**After compilation (`stratum build`), this creates:**
 
 **File: `dist/api/user/get-user.ts`**
 ```typescript
@@ -629,7 +629,7 @@ app.listen(3001);
 
 ### API with Validation
 
-```kora
+```stratum
 api createPost {
   input {
     title: String
@@ -660,7 +660,7 @@ api createPost {
 
 ### API with Complex Logic
 
-```kora
+```stratum
 api getPostsByAuthor {
   input {
     authorId: UUID
@@ -699,7 +699,7 @@ Page modules define your UI components.
 
 ### Basic Page
 
-```kora
+```stratum
 page Home {
   view() {
     <div>
@@ -712,7 +712,7 @@ page Home {
 
 ### Page with Data Loading
 
-```kora
+```stratum
 page PostDetail {
   load(id: UUID) -> Post
 
@@ -729,7 +729,7 @@ page PostDetail {
 
 ### Page with Multiple Parameters
 
-```kora
+```stratum
 page UserProfile {
   load(userId: UUID) -> User
 
@@ -745,7 +745,7 @@ page UserProfile {
 
 ### Page with Styling
 
-```kora
+```stratum
 page StyledPage {
   styles {
     .container {
@@ -777,9 +777,9 @@ page StyledPage {
 
 ### JSX Syntax
 
-Kora supports full JSX:
+Stratum supports full JSX:
 
-```kora
+```stratum
 page ProductList {
   load() -> Product[]
 
@@ -804,11 +804,11 @@ page ProductList {
 
 ## CSS Styling
 
-Kora supports multiple CSS approaches:
+Stratum supports multiple CSS approaches:
 
 ### Component-Scoped Styles
 
-```kora
+```stratum
 page Button {
   styles {
     .button {
@@ -833,7 +833,7 @@ page Button {
 
 ### Global Styles
 
-```kora
+```stratum
 styles global {
   :root {
     --primary-color: #007bff;
@@ -855,7 +855,7 @@ styles global {
 
 ### Responsive Design
 
-```kora
+```stratum
 page ResponsivePage {
   styles {
     .container {
@@ -897,13 +897,13 @@ Let's build a simple Todo app step by step with complete file structure!
 todo-app/
 ├── src/
 │   ├── domain/
-│   │   └── todo.kora           # Todo data model
+│   │   └── todo.stratum           # Todo data model
 │   ├── api/
-│   │   ├── get-todos.kora      # Get all todos
-│   │   ├── create-todo.kora    # Create new todo
-│   │   └── update-todo.kora    # Update todo
+│   │   ├── get-todos.stratum      # Get all todos
+│   │   ├── create-todo.stratum    # Create new todo
+│   │   └── update-todo.stratum    # Update todo
 │   └── ui/
-│       └── todo-list.kora      # Todo list page
+│       └── todo-list.stratum      # Todo list page
 ├── dist/                        # Compiled TypeScript (generated)
 ├── server.js                    # Node.js backend server
 ├── src/main.tsx                 # React app entry point
@@ -914,9 +914,9 @@ todo-app/
 
 ### Step 1: Define Domain
 
-**File: `src/domain/todo.kora`**
+**File: `src/domain/todo.stratum`**
 
-```kora
+```stratum
 module domain Todo {
   type Todo {
     id: UUID
@@ -929,7 +929,7 @@ module domain Todo {
 }
 ```
 
-**After `kora build`, this creates:**
+**After `stratum build`, this creates:**
 
 **File: `dist/domain/todo.ts`**
 ```typescript
@@ -945,9 +945,9 @@ export interface Todo {
 
 ### Step 2: Create APIs
 
-**File: `src/api/get-todos.kora`**
+**File: `src/api/get-todos.stratum`**
 
-```kora
+```stratum
 api getTodos {
   input {}
   output Todo[]
@@ -959,9 +959,9 @@ api getTodos {
 }
 ```
 
-**File: `src/api/create-todo.kora`**
+**File: `src/api/create-todo.stratum`**
 
-```kora
+```stratum
 api createTodo {
   input {
     title: String
@@ -984,9 +984,9 @@ api createTodo {
 }
 ```
 
-**File: `src/api/update-todo.kora`**
+**File: `src/api/update-todo.stratum`**
 
-```kora
+```stratum
 api updateTodo {
   input {
     id: UUID
@@ -1002,7 +1002,7 @@ api updateTodo {
 }
 ```
 
-**After `kora build`, these create:**
+**After `stratum build`, these create:**
 
 **File: `dist/api/get-todos.ts`**
 ```typescript
@@ -1057,7 +1057,7 @@ export async function updateTodoHandler(
 }
 ```
 
-```kora
+```stratum
 api getTodos {
   output Todo[]
 
@@ -1099,9 +1099,9 @@ api toggleTodo {
 
 ### Step 3: Build UI
 
-Create `page/todos.kora`:
+Create `page/todos.stratum`:
 
-```kora
+```stratum
 page Todos {
   load() -> Todo[]
 
@@ -1129,12 +1129,12 @@ page Todos {
 
 ```bash
 # Compile all files
-kora build
+stratum build
 
 # Or compile individually
-kora compile domain/todo.kora -o dist/domain/todo.ts
-kora compile api/todos.kora -o dist/api/todos.ts
-kora compile page/todos.kora -o dist/page/todos.tsx
+stratum compile domain/todo.stratum -o dist/domain/todo.ts
+stratum compile api/todos.stratum -o dist/api/todos.ts
+stratum compile page/todos.stratum -o dist/page/todos.tsx
 ```
 
 ### Step 5: Use in Your App
@@ -1154,7 +1154,7 @@ export default function App() {
 
 ### Error Handling
 
-```kora
+```stratum
 api getUser {
   input {
     id: UUID
@@ -1176,7 +1176,7 @@ api getUser {
 
 ### Conditional Rendering
 
-```kora
+```stratum
 page UserProfile {
   load(userId: UUID) -> User?
 
@@ -1197,7 +1197,7 @@ page UserProfile {
 
 ### Lists and Loops
 
-```kora
+```stratum
 page ProductList {
   load() -> Product[]
 
@@ -1222,7 +1222,7 @@ page ProductList {
 
 ### Event Handlers
 
-```kora
+```stratum
 page Counter {
   view() {
     <div>
@@ -1243,20 +1243,20 @@ page Counter {
 ```
 src/
   domain/
-    user.kora
-    post.kora
+    user.stratum
+    post.stratum
   api/
     user/
-      get-user.kora
-      create-user.kora
+      get-user.stratum
+      create-user.stratum
     post/
-      get-post.kora
-      create-post.kora
+      get-post.stratum
+      create-post.stratum
   page/
     user/
-      profile.kora
+      profile.stratum
     post/
-      detail.kora
+      detail.stratum
 ```
 
 ### 2. Keep Domain Pure
@@ -1268,7 +1268,7 @@ src/
 
 - Always define types in domain modules
 - Use optional types (`?`) for nullable fields
-- Leverage Kora's type system for compile-time safety
+- Leverage Stratum's type system for compile-time safety
 
 ### 4. Style Consistently
 
@@ -1292,11 +1292,11 @@ src/
 
 ## Next Steps
 
-1. **Create a project** - Use `kora new my-app` to get started
+1. **Create a project** - Use `stratum new my-app` to get started
 2. **Read the guides**:
    - [CREATE_APP_GUIDE.md](./CREATE_APP_GUIDE.md) - Complete app creation guide
    - [RUNTIME_ARCHITECTURE.md](./RUNTIME_ARCHITECTURE.md) - How UI and server run
-   - [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy your Kora apps
+   - [DEPLOYMENT.md](./DEPLOYMENT.md) - Deploy your Stratum apps
 3. **Explore examples** - Check the `samples/` directory for real-world patterns
 4. **Build something** - Start with a simple todo app, then expand
 5. **Join the community** - Get help and share your projects on GitHub
@@ -1307,26 +1307,26 @@ src/
 
 ```bash
 # Create new project
-kora new <name>
+stratum new <name>
 
 # Build project
-kora build
+stratum build
 
 # Start dev server (watch mode)
-kora dev
+stratum dev
 
 # Compile single file
-kora compile <file> -o <output>
+stratum compile <file> -o <output>
 
 # Check syntax
-kora check <file>
+stratum check <file>
 ```
 
 ### Project Structure
 
 ```
 my-app/
-├── src/              # Kora source files (.kora)
+├── src/              # Stratum source files (.stratum)
 │   ├── domain/       # Domain modules (data types)
 │   ├── api/          # API modules (backend handlers)
 │   └── ui/           # Page modules (UI components)
@@ -1338,7 +1338,7 @@ my-app/
 ### Common Patterns
 
 **Domain Module:**
-```kora
+```stratum
 module domain User {
   type User {
     id: UUID
@@ -1349,7 +1349,7 @@ module domain User {
 ```
 
 **API Module:**
-```kora
+```stratum
 api getUser {
   input { id: UUID }
   output User
@@ -1361,7 +1361,7 @@ api getUser {
 ```
 
 **Page Module:**
-```kora
+```stratum
 page UserProfile {
   load(id: UUID) -> User
   
@@ -1376,5 +1376,5 @@ page UserProfile {
 
 ---
 
-**Happy coding with Kora! 🟢**
+**Happy coding with Stratum! 🟢**
 

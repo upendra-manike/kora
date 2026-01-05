@@ -1,0 +1,17 @@
+api getUser {
+  input {
+    id: UUID
+  }
+
+  output User
+
+  handler {
+    let user = UserRepo.findById(id)
+    if (user == null) {
+      throw Error("User not found")
+    }
+    return user
+  }
+}
+
+

@@ -1,0 +1,17 @@
+api getUserByEmail {
+  input {
+    email: Email
+  }
+
+  output User
+
+  handler {
+    let user = UserRepo.findByEmail(email)
+    if (user == null) {
+      throw Error("User not found")
+    }
+    return user
+  }
+}
+
+

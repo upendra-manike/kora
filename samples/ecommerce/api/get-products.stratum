@@ -1,0 +1,27 @@
+api getProducts {
+  input {
+    categoryId: UUID?
+    minPrice: Number?
+    maxPrice: Number?
+    inStock: Boolean?
+    search: String?
+    limit: Number?
+    offset: Number?
+  }
+
+  output Product[]
+
+  handler {
+    return ProductRepo.findByFilters(
+      categoryId,
+      minPrice,
+      maxPrice,
+      inStock,
+      search,
+      limit || 20,
+      offset || 0
+    )
+  }
+}
+
+

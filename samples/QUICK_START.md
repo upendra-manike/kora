@@ -1,11 +1,11 @@
-# Quick Start: Create Projects with Kora
+# Quick Start: Create Projects with Stratum
 
-Get started building real applications with Kora in minutes!
+Get started building real applications with Stratum in minutes!
 
 ## Installation
 
 ```bash
-npm install -g @kora-lang/kora
+npm install -g @stratum-lang/stratum
 ```
 
 ## Create Your First Project
@@ -13,7 +13,7 @@ npm install -g @kora-lang/kora
 ### Step 1: Initialize
 
 ```bash
-kora new my-todo-app
+stratum new my-todo-app
 cd my-todo-app
 ```
 
@@ -25,18 +25,18 @@ cp -r ../samples/todo-app/src/* src/
 ```
 
 Or manually copy files:
-- `samples/todo-app/domain/todo.kora` → `src/domain/`
-- `samples/todo-app/api/*.kora` → `src/api/`
-- `samples/todo-app/ui/*.kora` → `src/ui/`
+- `samples/todo-app/domain/todo.stratum` → `src/domain/`
+- `samples/todo-app/api/*.stratum` → `src/api/`
+- `samples/todo-app/ui/*.stratum` → `src/ui/`
 
 ### Step 3: Compile
 
 ```bash
 # Check for errors
-kora check src/domain/todo.kora
+stratum check src/domain/todo.stratum
 
 # Build entire project
-kora build
+stratum build
 ```
 
 ### Step 4: Use Generated Code
@@ -69,7 +69,7 @@ export default async function TodosPage() {
 - 4 API files
 - 2 UI files
 
-**Perfect for**: Learning Kora basics
+**Perfect for**: Learning Stratum basics
 
 ### 2. E-commerce (Intermediate)
 
@@ -110,11 +110,11 @@ export default async function TodosPage() {
 ### 1. Create Project
 
 ```bash
-kora new my-project
+stratum new my-project
 cd my-project
 ```
 
-### 2. Write Kora Code
+### 2. Write Stratum Code
 
 Edit files in `src/`:
 - Domain types in `src/domain/`
@@ -125,10 +125,10 @@ Edit files in `src/`:
 
 ```bash
 # Watch mode (auto-compile on changes)
-kora dev
+stratum dev
 
 # Or manual compile
-kora build
+stratum build
 ```
 
 ### 4. Use in Your App
@@ -150,8 +150,8 @@ import { TodoList } from '@/dist/ui/todo-list';
 
 ### 1. Define Domain
 
-```kora
-// src/domain/todo.kora
+```stratum
+// src/domain/todo.stratum
 module domain Todo {
   type Todo {
     id: UUID
@@ -163,8 +163,8 @@ module domain Todo {
 
 ### 2. Create API
 
-```kora
-// src/api/create-todo.kora
+```stratum
+// src/api/create-todo.stratum
 api createTodo {
   input { title: String }
   output Todo
@@ -176,8 +176,8 @@ api createTodo {
 
 ### 3. Build UI
 
-```kora
-// src/ui/todo-list.kora
+```stratum
+// src/ui/todo-list.stratum
 page TodoList {
   load() -> Todo[]
   view(todos: Todo[]) {
@@ -196,7 +196,7 @@ page TodoList {
 ### 4. Compile
 
 ```bash
-kora build
+stratum build
 ```
 
 ### 5. Use
@@ -212,8 +212,8 @@ export default async function Page() {
 
 ## Tips for Real-Time Development
 
-1. **Use `kora dev`** - Auto-compiles on file changes
-2. **Check often** - Run `kora check` to catch errors early
+1. **Use `stratum dev`** - Auto-compiles on file changes
+2. **Check often** - Run `stratum check` to catch errors early
 3. **Start simple** - Begin with Todo App, then move to complex projects
 4. **Study samples** - Use sample projects as templates
 5. **Iterate quickly** - Compile → Test → Refine
@@ -227,5 +227,6 @@ export default async function Page() {
 
 ---
 
-**You're ready to build with Kora! Start with the Todo App sample.** 🚀
+**You're ready to build with Stratum! Start with the Todo App sample.** 🚀
+
 

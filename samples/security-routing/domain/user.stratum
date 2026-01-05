@@ -1,0 +1,41 @@
+module domain User {
+  type User {
+    id: UUID
+    email: Email
+    passwordHash: String
+    name: String
+    role: UserRole
+    permissions: Permission[]
+    isActive: Boolean
+    lastLoginAt: Date?
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  type UserRole {
+    ADMIN
+    MODERATOR
+    USER
+    GUEST
+  }
+
+  type Permission {
+    READ_POSTS
+    WRITE_POSTS
+    DELETE_POSTS
+    MANAGE_USERS
+    ADMIN_ACCESS
+  }
+
+  type Session {
+    id: UUID
+    userId: UUID
+    token: String
+    expiresAt: Date
+    ipAddress: String?
+    userAgent: String?
+    createdAt: Date
+  }
+}
+
+

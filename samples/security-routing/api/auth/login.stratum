@@ -1,0 +1,70 @@
+api login {
+  input {
+    email: Email
+    password: String
+    rememberMe: Boolean?
+  }
+
+  output {
+    user: User
+    token: String
+    expiresAt: Date
+  }
+
+  handler {
+    // Find user by email
+    let user = UserRepo.findByEmail(email)
+    if (user == null) {
+      throw Error("Invalid email or password")
+    }
+
+    // Check if user is active
+    if (!user.isActive) {
+      throw Error("Account is disabled")
+    }
+
+    // Verify password
+    let isValid = PasswordHash.verify(password, user.passwordHash)
+    if (!isValid) {
+      throw Error("Invalid email or password")
+    }
+
+    // Generate JWT token
+    let expiresIn = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60 // 30 days or 1 day
+    let token = JWT.generate({
+      userId: user.id,
+      role: user.role,
+      permissions: user.permissions
+    }, expiresIn)
+
+    // Create session
+    let session = {
+      id: UUID.generate(),
+      userId: user.id,
+      token: token,
+      expiresAt: Date.now() + expiresIn * 1000,
+      ipAddress: Request.getIpAddress(),
+      userAgent: Request.getUserAgent(),
+      createdAt: Date.now()
+    }
+    SessionRepo.save(session)
+
+    // Update last login
+    user.lastLoginAt = Date.now()
+    UserRepo.save(user)
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        permissions: user.permissions
+      },
+      token: token,
+      expiresAt: session.expiresAt
+    }
+  }
+}
+
+

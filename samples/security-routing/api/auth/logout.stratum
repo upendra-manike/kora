@@ -1,0 +1,22 @@
+api logout {
+  input {
+    token: String
+  }
+
+  output Boolean
+
+  handler {
+    // Verify token
+    let payload = JWT.verify(token)
+    if (payload == null) {
+      throw Error("Invalid token")
+    }
+
+    // Delete session
+    SessionRepo.deleteByToken(token)
+
+    return true
+  }
+}
+
+

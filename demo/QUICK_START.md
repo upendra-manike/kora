@@ -1,29 +1,29 @@
-# Kora Quick Start Demo
+# Stratum Quick Start Demo
 
-Get started with Kora in 5 minutes!
+Get started with Stratum in 5 minutes!
 
 ## Installation
 
 ```bash
-npm install -g @kora-lang/kora
+npm install -g @stratum-lang/stratum
 ```
 
-## Create Your First Kora App
+## Create Your First Stratum App
 
 ```bash
-kora new my-blog
+stratum new my-blog
 cd my-blog
 ```
 
 This creates a project with example files.
 
-## The Kora Workflow
+## The Stratum Workflow
 
 ### 1. Define Your Domain
 
-Create `src/domain/post.kora`:
+Create `src/domain/post.stratum`:
 
-```kora
+```stratum
 module domain Post {
   type Post {
     id: UUID
@@ -35,9 +35,9 @@ module domain Post {
 
 ### 2. Create an API
 
-Create `src/api/get-post.kora`:
+Create `src/api/get-post.stratum`:
 
-```kora
+```stratum
 api getPost {
   input { id: UUID }
   output Post
@@ -50,9 +50,9 @@ api getPost {
 
 ### 3. Build a Page
 
-Create `src/ui/post-page.kora`:
+Create `src/ui/post-page.stratum`:
 
-```kora
+```stratum
 page PostPage {
   load(id: UUID) -> Post
 
@@ -69,18 +69,18 @@ page PostPage {
 
 ```bash
 # Check your code
-kora check src/domain/post.kora
+stratum check src/domain/post.stratum
 
 # Compile to TypeScript
-kora build
+stratum build
 
 # Start development
-kora dev
+stratum dev
 ```
 
 ## What Happens
 
-The Kora compiler automatically:
+The Stratum compiler automatically:
 
 1. ✅ Generates TypeScript interfaces from domain types
 2. ✅ Creates API handler functions
@@ -148,14 +148,14 @@ export function PostPage({ post }: { post: Post }) {
 
 1. **Create a new project**:
    ```bash
-   kora new my-app
+   stratum new my-app
    ```
 
 2. **Edit the example files** in `src/`
 
 3. **Compile**:
    ```bash
-   kora build
+   stratum build
    ```
 
 4. **Check the output** in `dist/`
@@ -168,5 +168,6 @@ export function PostPage({ post }: { post: Post }) {
 
 ---
 
-**That's it! You're building with Kora!** 🚀
+**That's it! You're building with Stratum!** 🚀
+
 

@@ -211,3 +211,4 @@ Long-term vision and development plan for the Kora programming language.
 
 **Help shape Kora's future! Share your ideas and feedback.**
 
+

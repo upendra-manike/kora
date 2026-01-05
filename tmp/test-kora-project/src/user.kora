@@ -1,0 +1,7 @@
+module domain User {
+  type User {
+    id: UUID
+    name: String
+    email: Email
+  }
+}

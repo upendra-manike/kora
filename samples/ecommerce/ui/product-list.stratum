@@ -1,0 +1,31 @@
+page ProductList {
+  load(categoryId: UUID?) -> Product[]
+
+  view(products: Product[]) {
+    <div className="product-list">
+      <h1>Products</h1>
+      <div className="products-grid">
+        {for product in products {
+          <div key={product.id} className="product-card">
+            <img src={product.image} alt={product.name} />
+            <h3>{product.name}</h3>
+            <p className="price">${product.price}</p>
+            <div className="rating">
+              {"⭐".repeat(product.rating)}
+            </div>
+            {if product.inStock {
+              <button onClick={() => addToCart(product.id)}>
+                Add to Cart
+              </button>
+            } else {
+              <span className="out-of-stock">Out of Stock</span>
+            }}
+            <a href={"/products/" + product.id}>View Details</a>
+          </div>
+        }}
+      </div>
+    </div>
+  }
+}
+
+

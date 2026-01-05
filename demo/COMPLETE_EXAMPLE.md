@@ -1,6 +1,6 @@
-# Complete Kora Example: Blog Application
+# Complete Stratum Example: Blog Application
 
-This is a complete, working example of a blog application built with Kora.
+This is a complete, working example of a blog application built with Stratum.
 
 ## Project Structure
 
@@ -8,23 +8,23 @@ This is a complete, working example of a blog application built with Kora.
 blog/
 ├── src/
 │   ├── domain/
-│   │   └── post.kora          # Domain types
+│   │   └── post.stratum          # Domain types
 │   ├── api/
-│   │   ├── get-post.kora      # Get single post
-│   │   ├── create-post.kora   # Create new post
-│   │   └── list-posts.kora    # List all posts
+│   │   ├── get-post.stratum      # Get single post
+│   │   ├── create-post.stratum   # Create new post
+│   │   └── list-posts.stratum    # List all posts
 │   └── ui/
-│       ├── post-list.kora     # Post list page
-│       ├── post-detail.kora   # Post detail page
-│       └── create-post.kora   # Create post page
+│       ├── post-list.stratum     # Post list page
+│       ├── post-detail.stratum   # Post detail page
+│       └── create-post.stratum   # Create post page
 └── dist/                       # Compiled output
 ```
 
 ## Step 1: Domain Types
 
-**File: `src/domain/post.kora`**
+**File: `src/domain/post.stratum`**
 
-```kora
+```stratum
 module domain Post {
   type Post {
     id: UUID
@@ -68,9 +68,9 @@ export interface Author {
 
 ### Get Post API
 
-**File: `src/api/get-post.kora`**
+**File: `src/api/get-post.stratum`**
 
-```kora
+```stratum
 api getPost {
   input {
     id: UUID
@@ -102,9 +102,9 @@ export async function getPostHandler(
 
 ### Create Post API
 
-**File: `src/api/create-post.kora`**
+**File: `src/api/create-post.stratum`**
 
-```kora
+```stratum
 api createPost {
   input {
     title: String
@@ -132,9 +132,9 @@ api createPost {
 
 ### Post List Page
 
-**File: `src/ui/post-list.kora`**
+**File: `src/ui/post-list.stratum`**
 
-```kora
+```stratum
 page PostList {
   load() -> Post[]
 
@@ -182,9 +182,9 @@ export function PostList({ posts }: { posts: Post[] }) {
 
 ### Post Detail Page
 
-**File: `src/ui/post-detail.kora`**
+**File: `src/ui/post-detail.stratum`**
 
-```kora
+```stratum
 page PostDetail {
   load(id: UUID) -> Post
 
@@ -207,12 +207,12 @@ page PostDetail {
 
 ```bash
 # Check all files
-kora check src/domain/post.kora
-kora check src/api/get-post.kora
-kora check src/ui/post-list.kora
+stratum check src/domain/post.stratum
+stratum check src/api/get-post.stratum
+stratum check src/ui/post-list.stratum
 
 # Compile entire project
-kora build
+stratum build
 
 # Output goes to dist/
 ```
@@ -275,14 +275,14 @@ export function PostsPage() {
 
 ```bash
 # 1. Create project
-kora new blog-demo
+stratum new blog-demo
 cd blog-demo
 
 # 2. Copy files from demo/blog/
 cp -r ../demo/blog/src/* src/
 
 # 3. Compile
-kora build
+stratum build
 
 # 4. Use in your Next.js/React app
 # Import from dist/
@@ -299,5 +299,6 @@ kora build
 
 ---
 
-**This is the power of Kora - one language, three concerns, zero glue code!**
+**This is the power of Stratum - one language, three concerns, zero glue code!**
+
 

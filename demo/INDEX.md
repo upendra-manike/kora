@@ -1,6 +1,6 @@
-# Kora Demo Index
+# Stratum Demo Index
 
-Welcome to the Kora language demos! Here's what's available:
+Welcome to the Stratum language demos! Here's what's available:
 
 ## 📚 Documentation
 
@@ -11,7 +11,7 @@ Complete overview of the demo, project structure, and step-by-step guide.
 Get started in 5 minutes! Perfect for first-time users.
 
 ### [WALKTHROUGH.md](./WALKTHROUGH.md)
-Detailed walkthrough showing how Kora works from code to application.
+Detailed walkthrough showing how Stratum works from code to application.
 
 ### [COMPLETE_EXAMPLE.md](./COMPLETE_EXAMPLE.md)
 Full blog application example with explanations of every part.
@@ -23,21 +23,21 @@ Full blog application example with explanations of every part.
 A complete blog application demonstrating:
 
 #### Domain Layer
-- `domain/post.kora` - Post, Author, Comment types
+- `domain/post.stratum` - Post, Author, Comment types
 
 #### API Layer
-- `api/get-post.kora` - Get single post
-- `api/create-post.kora` - Create new post
-- `api/list-posts.kora` - List all posts
+- `api/get-post.stratum` - Get single post
+- `api/create-post.stratum` - Create new post
+- `api/list-posts.stratum` - List all posts
 
 #### UI Layer
-- `ui/post-list.kora` - Post listing page
-- `ui/post-detail.kora` - Post detail page
-- `ui/create-post.kora` - Create post form
+- `ui/post-list.stratum` - Post listing page
+- `ui/post-detail.stratum` - Post detail page
+- `ui/create-post.stratum` - Create post form
 
 ## 🚀 Getting Started
 
-1. **New to Kora?** → Start with [QUICK_START.md](./QUICK_START.md)
+1. **New to Stratum?** → Start with [QUICK_START.md](./QUICK_START.md)
 2. **Want to understand how it works?** → Read [WALKTHROUGH.md](./WALKTHROUGH.md)
 3. **Ready to build?** → Follow [COMPLETE_EXAMPLE.md](./COMPLETE_EXAMPLE.md)
 4. **Need reference?** → Check [README.md](./README.md)
@@ -54,21 +54,21 @@ A complete blog application demonstrating:
 ## 📦 Installation
 
 ```bash
-npm install -g @kora-lang/kora
+npm install -g @stratum-lang/stratum
 ```
 
 ## 🏃 Quick Test
 
 ```bash
 # Create new project
-kora new my-app
+stratum new my-app
 
 # Copy demo files
 cp -r demo/blog/src/* my-app/src/
 
 # Compile
 cd my-app
-kora build
+stratum build
 
 # Check output in dist/
 ```
@@ -77,9 +77,10 @@ kora build
 
 - [Main README](../README.md) - Language overview
 - [CLI Documentation](../docs/CLI.md) - Command reference
-- [Grammar Specification](../grammar/kora.bnf) - Language grammar
+- [Grammar Specification](../grammar/stratum.bnf) - Language grammar
 
 ---
 
-**Start with [QUICK_START.md](./QUICK_START.md) to begin your Kora journey!** 🚀
+**Start with [QUICK_START.md](./QUICK_START.md) to begin your Stratum journey!** 🚀
+
 

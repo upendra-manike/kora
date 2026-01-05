@@ -1,4 +1,4 @@
-# MongoDB Setup for Kora
+# MongoDB Setup for Stratum
 
 ## Installation
 
@@ -78,14 +78,15 @@ MONGODB_URI=mongodb://localhost:27017/myapp
 MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/myapp
 ```
 
-## Using with Kora
+## Using with Stratum
 
-1. Write Kora code (domain, API, UI)
-2. Compile with `kora build`
+1. Write Stratum code (domain, API, UI)
+2. Compile with `stratum build`
 3. Implement repository layer with MongoDB
 4. Use generated API handlers
 
 ---
 
-**Kora generates the structure, you implement the database layer!**
+**Stratum generates the structure, you implement the database layer!**
+
 

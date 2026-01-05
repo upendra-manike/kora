@@ -1,0 +1,36 @@
+api verifyToken {
+  input {
+    token: String
+  }
+
+  output AuthContext
+
+  handler {
+    // Verify JWT token
+    let payload = JWT.verify(token)
+    if (payload == null) {
+      throw Error("Invalid or expired token")
+    }
+
+    // Check if session exists and is valid
+    let session = SessionRepo.findByToken(token)
+    if (session == null || session.expiresAt < Date.now()) {
+      throw Error("Session expired")
+    }
+
+    // Get user
+    let user = UserRepo.findById(payload.userId)
+    if (user == null || !user.isActive) {
+      throw Error("User not found or inactive")
+    }
+
+    return {
+      userId: user.id,
+      role: user.role,
+      permissions: user.permissions,
+      sessionId: session.id
+    }
+  }
+}
+
+

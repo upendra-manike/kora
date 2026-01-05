@@ -1,0 +1,15 @@
+api deleteUser {
+  input {
+    id: UUID
+  }
+
+  output Boolean
+
+  handler {
+    // MySQL CASCADE handles profile deletion
+    UserRepo.delete(id)
+    return true
+  }
+}
+
+

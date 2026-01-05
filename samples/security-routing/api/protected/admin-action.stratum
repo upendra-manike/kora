@@ -1,0 +1,45 @@
+api adminAction {
+  // Protected endpoint - requires admin role
+  @requireAuth
+  @requireRole(ADMIN)
+
+  input {
+    action: String
+    targetId: UUID?
+  }
+
+  output {
+    success: Boolean
+    message: String
+  }
+
+  handler {
+    let authContext = Request.getAuthContext()
+    if (authContext == null) {
+      throw Error("Unauthorized")
+    }
+
+    // Check admin role (also checked by decorator)
+    if (authContext.role != UserRole.ADMIN) {
+      throw Error("Admin access required")
+    }
+
+    // Check permission
+    if (!authContext.permissions.contains(Permission.ADMIN_ACCESS)) {
+      throw Error("Insufficient permissions")
+    }
+
+    // Perform admin action
+    if (action == "deleteUser" && targetId != null) {
+      UserRepo.delete(targetId)
+      return {
+        success: true,
+        message: "User deleted successfully"
+      }
+    }
+
+    throw Error("Invalid action")
+  }
+}
+
+

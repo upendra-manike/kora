@@ -1,0 +1,18 @@
+module domain Cart {
+  type Cart {
+    id: UUID
+    userId: UUID
+    items: CartItem[]
+    total: Number
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  type CartItem {
+    productId: UUID
+    quantity: Number
+    price: Number
+  }
+}
+
+

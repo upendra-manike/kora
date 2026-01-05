@@ -1,0 +1,38 @@
+api getProfile {
+  // Protected endpoint - requires authentication
+  @requireAuth
+
+  input {
+    // No input needed - user from token
+  }
+
+  output User
+
+  handler {
+    // Get user from auth context (set by middleware)
+    let authContext = Request.getAuthContext()
+    if (authContext == null) {
+      throw Error("Unauthorized")
+    }
+
+    let user = UserRepo.findById(authContext.userId)
+    if (user == null) {
+      throw Error("User not found")
+    }
+
+    // Return user without password hash
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      permissions: user.permissions,
+      isActive: user.isActive,
+      lastLoginAt: user.lastLoginAt,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    }
+  }
+}
+
+

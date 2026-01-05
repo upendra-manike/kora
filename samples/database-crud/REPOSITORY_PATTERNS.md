@@ -1,6 +1,6 @@
 # Repository Implementation Patterns
 
-Complete examples of implementing repositories for different databases with Kora.
+Complete examples of implementing repositories for different databases with Stratum.
 
 ## MongoDB Repository
 
@@ -239,12 +239,13 @@ export class UserRepo {
 
 ## Key Points
 
-1. **Same Kora Code** - Domain, API, UI stay the same
+1. **Same Stratum Code** - Domain, API, UI stay the same
 2. **Different Repository** - Implement for your database
-3. **Type Safety** - Kora types flow to repository
+3. **Type Safety** - Stratum types flow to repository
 4. **Flexibility** - Choose any database or ORM
 
 ---
 
-**Kora defines the structure, you implement the data layer!**
+**Stratum defines the structure, you implement the data layer!**
+
 

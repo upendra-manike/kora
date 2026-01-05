@@ -1,0 +1,41 @@
+api updateProfile {
+  // Protected endpoint - requires authentication
+  @requireAuth
+
+  input {
+    name: String?
+    email: Email?
+  }
+
+  output User
+
+  handler {
+    let authContext = Request.getAuthContext()
+    if (authContext == null) {
+      throw Error("Unauthorized")
+    }
+
+    let user = UserRepo.findById(authContext.userId)
+    if (user == null) {
+      throw Error("User not found")
+    }
+
+    // Update fields
+    if (name != null) {
+      user.name = name
+    }
+    if (email != null) {
+      // Check email uniqueness
+      let existing = UserRepo.findByEmail(email)
+      if (existing != null && existing.id != user.id) {
+        throw Error("Email already taken")
+      }
+      user.email = email
+    }
+
+    user.updatedAt = Date.now()
+    return UserRepo.save(user)
+  }
+}
+
+

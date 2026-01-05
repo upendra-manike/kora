@@ -1,0 +1,30 @@
+api createUser {
+  input {
+    name: String
+    email: Email
+    age: Number?
+    role: UserRole
+    profile: UserProfile?
+  }
+
+  output User
+
+  handler {
+    // Prisma handles uniqueness check
+    let user = {
+      id: UUID.generate(),
+      name: name,
+      email: email,
+      age: age,
+      role: role,
+      profile: profile,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+
+    // Prisma creates user with transaction
+    return UserRepo.create(user)
+  }
+}
+
+

@@ -1,0 +1,53 @@
+api moderatorAction {
+  // Protected endpoint - requires moderator or admin role
+  @requireAuth
+  @requireRole(MODERATOR, ADMIN)
+
+  input {
+    postId: UUID
+    action: String
+  }
+
+  output {
+    success: Boolean
+    message: String
+  }
+
+  handler {
+    let authContext = Request.getAuthContext()
+    if (authContext == null) {
+      throw Error("Unauthorized")
+    }
+
+    // Check role (moderator or admin)
+    if (authContext.role != UserRole.MODERATOR && authContext.role != UserRole.ADMIN) {
+      throw Error("Moderator access required")
+    }
+
+    // Check permission
+    if (!authContext.permissions.contains(Permission.DELETE_POSTS)) {
+      throw Error("Insufficient permissions")
+    }
+
+    // Perform moderation action
+    if (action == "delete") {
+      PostRepo.delete(postId)
+      return {
+        success: true,
+        message: "Post deleted"
+      }
+    }
+
+    if (action == "approve") {
+      PostRepo.approve(postId)
+      return {
+        success: true,
+        message: "Post approved"
+      }
+    }
+
+    throw Error("Invalid action")
+  }
+}
+
+

@@ -1,0 +1,54 @@
+page UserDetail {
+  load(id: UUID) -> User
+
+  view(user: User) {
+    <div className="user-detail">
+      <div className="user-header">
+        <h1>{user.name}</h1>
+        <div className="user-meta">
+          <span className="role role-{user.role}">{user.role}</span>
+          <span>Created: {user.createdAt}</span>
+        </div>
+      </div>
+
+      <div className="user-content">
+        <section>
+          <h2>Contact Information</h2>
+          <p><strong>Email:</strong> {user.email}</p>
+          {if user.age != null {
+            <p><strong>Age:</strong> {user.age}</p>
+          }}
+        </section>
+
+        {if user.profile != null {
+          <section>
+            <h2>Profile</h2>
+            {if user.profile.bio != null {
+              <p>{user.profile.bio}</p>
+            }}
+            {if user.profile.location != null {
+              <p><strong>Location:</strong> {user.profile.location}</p>
+            }}
+            {if user.profile.avatar != null {
+              <img src={user.profile.avatar} alt={user.name} />
+            }}
+          </section>
+        }}
+
+        <div className="user-actions">
+          <a href={"/users/" + user.id + "/edit"} className="btn btn-primary">
+            Edit User
+          </a>
+          <button 
+            onClick={() => deleteUser(user.id)}
+            className="btn btn-danger"
+          >
+            Delete User
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}
+
+

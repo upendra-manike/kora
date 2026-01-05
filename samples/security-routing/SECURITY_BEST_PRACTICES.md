@@ -1,12 +1,12 @@
-# Security Best Practices - Kora
+# Security Best Practices - Stratum
 
-Complete security implementation guide for Kora applications.
+Complete security implementation guide for Stratum applications.
 
 ## Authentication
 
 ### Password Security
 
-```kora
+```stratum
 // Hash passwords (never store plain text)
 let passwordHash = PasswordHash.hash(password)
 
@@ -22,7 +22,7 @@ let isValid = PasswordHash.verify(password, hash)
 
 ### JWT Tokens
 
-```kora
+```stratum
 // Generate token
 let token = JWT.generate({
   userId: user.id,
@@ -42,7 +42,7 @@ let payload = JWT.verify(token)
 
 ### Session Management
 
-```kora
+```stratum
 // Create session
 let session = {
   id: UUID.generate(),
@@ -71,7 +71,7 @@ if (session == null || session.expiresAt < Date.now()) {
 
 ### Role-Based Access Control (RBAC)
 
-```kora
+```stratum
 // Check role
 if (authContext.role != UserRole.ADMIN) {
   throw Error("Admin access required")
@@ -86,7 +86,7 @@ if (authContext.role != UserRole.ADMIN &&
 
 ### Permission-Based Access
 
-```kora
+```stratum
 // Check permission
 if (!authContext.permissions.contains(Permission.DELETE_POSTS)) {
   throw Error("Insufficient permissions")
@@ -103,7 +103,7 @@ if (!authContext.permissions.contains(Permission.WRITE_POSTS) ||
 
 ### Email Validation
 
-```kora
+```stratum
 if (!EmailValidator.isValid(email)) {
   throw Error("Invalid email format")
 }
@@ -111,7 +111,7 @@ if (!EmailValidator.isValid(email)) {
 
 ### Password Strength
 
-```kora
+```stratum
 if (!PasswordValidator.isStrong(password)) {
   throw Error("Password must be at least 8 characters with uppercase, lowercase, number, and special character")
 }
@@ -119,7 +119,7 @@ if (!PasswordValidator.isStrong(password)) {
 
 ### Input Sanitization
 
-```kora
+```stratum
 // Sanitize user input
 let sanitized = InputSanitizer.sanitize(userInput)
 
@@ -131,7 +131,7 @@ if (typeof value != "string") {
 
 ### SQL Injection Prevention
 
-```kora
+```stratum
 // Use parameterized queries (in repository)
 UserRepo.query("SELECT * FROM users WHERE id = ?", [id])
 // NOT: "SELECT * FROM users WHERE id = " + id
@@ -141,7 +141,7 @@ UserRepo.query("SELECT * FROM users WHERE id = ?", [id])
 
 ### Rate Limiting
 
-```kora
+```stratum
 @rateLimit(maxRequests: 100, windowMs: 60000)
 api login {
   // Login logic
@@ -150,7 +150,7 @@ api login {
 
 ### CORS Configuration
 
-```kora
+```stratum
 @cors(origins: ["https://example.com"])
 api publicApi {
   // API logic
@@ -159,7 +159,7 @@ api publicApi {
 
 ### HTTPS Only
 
-```kora
+```stratum
 @requireHttps
 api sensitiveApi {
   // API logic
@@ -170,7 +170,7 @@ api sensitiveApi {
 
 ### Sensitive Data
 
-```kora
+```stratum
 // Never return password hashes
 return {
   id: user.id,
@@ -182,7 +182,7 @@ return {
 
 ### Data Encryption
 
-```kora
+```stratum
 // Encrypt sensitive data
 let encrypted = Encryption.encrypt(sensitiveData, key)
 
@@ -194,7 +194,7 @@ let decrypted = Encryption.decrypt(encrypted, key)
 
 ### Don't Leak Information
 
-```kora
+```stratum
 // Bad
 throw Error("User with email admin@example.com not found")
 
@@ -204,7 +204,7 @@ throw Error("Invalid email or password")
 
 ### Logging
 
-```kora
+```stratum
 // Log security events
 SecurityLogger.log({
   event: "failed_login",
@@ -218,7 +218,7 @@ SecurityLogger.log({
 
 ### Public Routes
 
-```kora
+```stratum
 page Login {
   @public
   view() { /* Login form */ }
@@ -227,7 +227,7 @@ page Login {
 
 ### Protected Routes
 
-```kora
+```stratum
 page Dashboard {
   @requireAuth
   @redirectUnauthenticated("/login")
@@ -237,7 +237,7 @@ page Dashboard {
 
 ### Role-Based Routes
 
-```kora
+```stratum
 page AdminPanel {
   @requireAuth
   @requireRole(ADMIN)
@@ -248,7 +248,7 @@ page AdminPanel {
 
 ## Security Headers
 
-Kora automatically adds security headers:
+Stratum automatically adds security headers:
 
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
@@ -273,5 +273,6 @@ Kora automatically adds security headers:
 
 ---
 
-**Security is built into Kora's architecture!**
+**Security is built into Stratum's architecture!**
+
 

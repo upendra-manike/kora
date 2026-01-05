@@ -1,0 +1,21 @@
+module domain User {
+  type User {
+    id: UUID
+    username: String
+    email: Email
+    name: String
+    bio: String?
+    avatar: String?
+    role: UserRole
+    posts: Post[]
+    createdAt: Date
+  }
+
+  type UserRole {
+    ADMIN
+    AUTHOR
+    READER
+  }
+}
+
+

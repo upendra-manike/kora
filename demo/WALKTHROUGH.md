@@ -1,6 +1,6 @@
-# Kora Language Walkthrough
+# Stratum Language Walkthrough
 
-A step-by-step walkthrough showing how Kora works from code to running application.
+A step-by-step walkthrough showing how Stratum works from code to running application.
 
 ## Overview
 
@@ -9,7 +9,7 @@ This walkthrough demonstrates building a blog application with:
 - **3 API endpoints** (get, create, list)
 - **3 UI pages** (list, detail, create)
 
-## The Kora Philosophy
+## The Stratum Philosophy
 
 > **One language, three concerns, zero glue code.**
 
@@ -21,13 +21,13 @@ Traditional stack requires:
 - Validation logic
 - Error handling
 
-**Kora does all of this automatically.**
+**Stratum does all of this automatically.**
 
 ## Step 1: Define Domain (30 seconds)
 
-**File: `domain/post.kora`**
+**File: `domain/post.stratum`**
 
-```kora
+```stratum
 module domain Post {
   type Post {
     id: UUID
@@ -45,9 +45,9 @@ module domain Post {
 
 ## Step 2: Create API (1 minute)
 
-**File: `api/get-post.kora`**
+**File: `api/get-post.stratum`**
 
-```kora
+```stratum
 api getPost {
   input { id: UUID }
   output Post
@@ -65,9 +65,9 @@ api getPost {
 
 ## Step 3: Build UI (1 minute)
 
-**File: `ui/post-detail.kora`**
+**File: `ui/post-detail.stratum`**
 
-```kora
+```stratum
 page PostDetail {
   load(id: UUID) -> Post
   view(post: Post) {
@@ -116,9 +116,9 @@ export function PostDetail({ id }: { id: string }) {
 
 **Total: ~40 lines, 4 files, manual connections**
 
-### Kora Approach
+### Stratum Approach
 
-```kora
+```stratum
 // Domain
 type Post { id: UUID; title: String; }
 
@@ -189,27 +189,27 @@ export function PostDetail({ post }: { post: Post }) {
 
 ## Try It Yourself
 
-### 1. Install Kora
+### 1. Install Stratum
 
 ```bash
-npm install -g @kora-lang/kora
+npm install -g @stratum-lang/stratum
 ```
 
 ### 2. Create Project
 
 ```bash
-kora new my-blog
+stratum new my-blog
 cd my-blog
 ```
 
-### 3. Write Kora Code
+### 3. Write Stratum Code
 
 Copy files from `demo/blog/` to your `src/` directory.
 
 ### 4. Compile
 
 ```bash
-kora build
+stratum build
 ```
 
 ### 5. Use Generated Code
@@ -239,5 +239,6 @@ Import from `dist/` in your Next.js/React app.
 
 ---
 
-**This is Kora - making full-stack development simple and correct by default.**
+**This is Stratum - making full-stack development simple and correct by default.**
+
 
