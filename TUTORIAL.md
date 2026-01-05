@@ -453,7 +453,22 @@ npm run server
 
 Domain modules define your data models and business logic.
 
+### File Structure
+
+Domain modules are typically placed in `src/domain/` directory:
+
+```
+my-app/
+└── src/
+    └── domain/
+        ├── user.kora          # User domain module
+        ├── product.kora       # Product domain module
+        └── order.kora         # Order domain module
+```
+
 ### Basic Type Definition
+
+**File: `src/domain/user.kora`**
 
 ```kora
 module domain User {
@@ -465,6 +480,20 @@ module domain User {
   }
 }
 ```
+
+**After compilation (`kora build`), this creates:**
+
+**File: `dist/user.ts`**
+```typescript
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+}
+```
+
+This TypeScript interface can now be imported in both your API handlers and React components!
 
 ### Complex Types
 
